@@ -8,6 +8,7 @@ import 'screens/news/newsscreen.dart';
 import 'screens/profile/profilescreen.dart';
 import 'screens/time/timescreen.dart';
 import 'widgets/bottom_navigation.dart';
+import 'config/theme/app_colors.dart';
 import 'routes/app_routes.dart';
 
 /// App Configuration - Main app widget setup
@@ -107,6 +108,8 @@ class _MainLayoutState extends State<MainLayout> {
     return Scaffold(
       appBar: AppBar(
         title: Text(_titles[_currentIndex]),
+        backgroundColor: AppColors.appBar,
+        foregroundColor: AppColors.white,
         elevation: 0,
         actions: [
           // Info button
@@ -117,7 +120,7 @@ class _MainLayoutState extends State<MainLayout> {
                 onTap: () => _showInfoDialog(),
                 child: Row(
                   children: const [
-                    Icon(Icons.info_outline, color: Colors.white),
+                    Icon(Icons.info_outline),
                     SizedBox(width: 8),
                     Text('Info'),
                   ],
