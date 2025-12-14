@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../config/theme/app_colors.dart';
 import 'dart:async';
+import 'dart:math' as math;
 
 /// Home Screen - RailPulse Main Screen
 class HomeScreen extends StatefulWidget {
@@ -13,7 +13,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late Timer _timer;
   DateTime _currentTime = DateTime.now();
-  int _currentIndex = 0;
 
   @override
   void initState() {
@@ -53,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final isMobile = screenWidth < 600;
 
     return Scaffold(
-      backgroundColor: AppColors.primary,
+      backgroundColor: const Color(0xFF8B5A3C),
       body: Column(
         children: [
           // Top Brown Section
@@ -68,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Text(
                   'WELCOME TO RAILPULSE',
                   style: TextStyle(
-                    color: AppColors.white,
+                    color: Colors.white,
                     fontSize: isMobile ? 16 : 20,
                     fontWeight: FontWeight.w600,
                     letterSpacing: 2,
@@ -82,7 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   width: isMobile ? 80 : 100,
                   height: isMobile ? 80 : 100,
                   decoration: BoxDecoration(
-                    border: Border.all(color: AppColors.white, width: 3),
+                    border: Border.all(color: Colors.white, width: 3),
                     shape: BoxShape.circle,
                   ),
                   child: Stack(
@@ -92,13 +91,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         width: isMobile ? 65 : 80,
                         height: isMobile ? 65 : 80,
                         decoration: BoxDecoration(
-                          border: Border.all(color: AppColors.white, width: 2),
+                          border: Border.all(color: Colors.white, width: 2),
                           shape: BoxShape.circle,
                         ),
                       ),
                       Icon(
                         Icons.train,
-                        color: AppColors.white,
+                        color: Colors.white,
                         size: isMobile ? 35 : 40,
                       ),
                     ],
@@ -110,7 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Text(
                   'RailPulse',
                   style: TextStyle(
-                    color: AppColors.white,
+                    color: Colors.white,
                     fontSize: isMobile ? 20 : 24,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 1,
@@ -126,7 +125,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     border: Border.all(color: Colors.white, width: 3),
                     shape: BoxShape.circle,
                   ),
-                  child: CustomPaint(painter: ClockPainter(time: _currentTime)),
+                  child: CustomPaint(
+                    painter: ClockPainter(time: _currentTime),
+                  ),
                 ),
                 SizedBox(height: isMobile ? 12 : 16),
 
@@ -134,7 +135,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Text(
                   _formatTime(_currentTime),
                   style: TextStyle(
-                    color: AppColors.white,
+                    color: Colors.white,
                     fontSize: isMobile ? 20 : 24,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 2,
@@ -146,7 +147,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Text(
                   _formatDate(_currentTime),
                   style: TextStyle(
-                    color: AppColors.white,
+                    color: Colors.white,
                     fontSize: isMobile ? 14 : 16,
                     letterSpacing: 1,
                   ),
@@ -154,45 +155,50 @@ class _HomeScreenState extends State<HomeScreen> {
                 SizedBox(height: isMobile ? 20 : 24),
 
                 // Live Train Alerts Button
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 12,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.white,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        'LIVE TRAIN ALERTS',
-                        style: TextStyle(
-                          color: Colors.red.shade600,
-                          fontSize: isMobile ? 14 : 16,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 1.5,
+                GestureDetector(
+                  onTap: () {
+                    // Navigate to alerts page
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 12,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'LIVE TRAIN ALERTS',
+                          style: TextStyle(
+                            color: Colors.red.shade600,
+                            fontSize: isMobile ? 14 : 16,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 1.5,
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 12),
-                      Icon(
-                        Icons.arrow_forward,
-                        color: Colors.red.shade600,
-                        size: isMobile ? 20 : 24,
-                      ),
-                      Icon(
-                        Icons.arrow_forward,
-                        color: Colors.red.shade600,
-                        size: isMobile ? 20 : 24,
-                      ),
-                      Icon(
-                        Icons.arrow_forward,
-                        color: Colors.red.shade600,
-                        size: isMobile ? 20 : 24,
-                      ),
-                    ],
+                        const SizedBox(width: 12),
+                        Icon(
+                          Icons.arrow_forward,
+                          color: Colors.red.shade600,
+                          size: isMobile ? 20 : 24,
+                        ),
+                        Icon(
+                          Icons.arrow_forward,
+                          color: Colors.red.shade600,
+                          size: isMobile ? 20 : 24,
+                        ),
+                        Icon(
+                          Icons.arrow_forward,
+                          color: Colors.red.shade600,
+                          size: isMobile ? 20 : 24,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -217,7 +223,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     colors: [
-                      AppColors.primary.withOpacity(0.3),
+                      const Color(0xFF8B5A3C).withOpacity(0.3),
                       Colors.black.withOpacity(0.3),
                     ],
                   ),
@@ -242,48 +248,48 @@ class ClockPainter extends CustomPainter {
     final center = Offset(size.width / 2, size.height / 2);
     final radius = size.width / 2;
 
-    // Draw clock circle markers
+    // Draw clock circle markers (12 hour markers)
     final markerPaint = Paint()
-      ..color = AppColors.white
+      ..color = Colors.white
       ..strokeWidth = 2
       ..style = PaintingStyle.fill;
 
     for (int i = 0; i < 12; i++) {
-      final angle = (i * 30 - 90) * (3.14159 / 180);
-      final x = center.dx + (radius - 12) * cos(angle);
-      final y = center.dy + (radius - 12) * sin(angle);
+      final angle = (i * 30 - 90) * math.pi / 180;
+      final x = center.dx + (radius - 12) * math.cos(angle);
+      final y = center.dy + (radius - 12) * math.sin(angle);
       canvas.drawCircle(Offset(x, y), 3, markerPaint);
     }
 
     // Hour hand
     final hourAngle =
-        ((time.hour % 12) * 30 + time.minute * 0.5 - 90) * (3.14159 / 180);
+        ((time.hour % 12) * 30 + time.minute * 0.5 - 90) * math.pi / 180;
     final hourPaint = Paint()
-      ..color = AppColors.white
+      ..color = Colors.white
       ..strokeWidth = 4
       ..strokeCap = StrokeCap.round;
 
     canvas.drawLine(
       center,
       Offset(
-        center.dx + (radius * 0.4) * cos(hourAngle),
-        center.dy + (radius * 0.4) * sin(hourAngle),
+        center.dx + (radius * 0.4) * math.cos(hourAngle),
+        center.dy + (radius * 0.4) * math.sin(hourAngle),
       ),
       hourPaint,
     );
 
     // Minute hand
-    final minuteAngle = (time.minute * 6 - 90) * (3.14159 / 180);
+    final minuteAngle = (time.minute * 6 - 90) * math.pi / 180;
     final minutePaint = Paint()
-      ..color = AppColors.white
+      ..color = Colors.white
       ..strokeWidth = 3
       ..strokeCap = StrokeCap.round;
 
     canvas.drawLine(
       center,
       Offset(
-        center.dx + (radius * 0.6) * cos(minuteAngle),
-        center.dy + (radius * 0.6) * sin(minuteAngle),
+        center.dx + (radius * 0.6) * math.cos(minuteAngle),
+        center.dy + (radius * 0.6) * math.sin(minuteAngle),
       ),
       minutePaint,
     );
@@ -296,12 +302,4 @@ class ClockPainter extends CustomPainter {
   bool shouldRepaint(ClockPainter oldDelegate) {
     return oldDelegate.time != time;
   }
-
-  double cos(double angle) => (angle * 180 / 3.14159).cos();
-  double sin(double angle) => (angle * 180 / 3.14159).sin();
-}
-
-extension on double {
-  double cos() => this * 0.017453292519943295;
-  double sin() => this * 0.017453292519943295;
 }
