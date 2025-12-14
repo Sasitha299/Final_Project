@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'screens/splash/splash_screen.dart';
 import 'screens/login/login_screen.dart';
+import 'screens/signup/signup_screen.dart';
 import 'screens/home/homescreen.dart';
 import 'screens/others/othersscreen.dart';
 import 'screens/news/newsscreen.dart';
@@ -43,6 +44,9 @@ class App extends StatelessWidget {
 
       case AppRoutes.login:
         return MaterialPageRoute(builder: (_) => const LoginScreen());
+
+      case AppRoutes.signup:
+        return MaterialPageRoute(builder: (_) => const SignupScreen());
 
       case AppRoutes.home:
         return MaterialPageRoute(builder: (_) => const MainLayout());
