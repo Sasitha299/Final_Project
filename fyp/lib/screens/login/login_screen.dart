@@ -79,7 +79,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           height: logoSize,
                           decoration: BoxDecoration(
                             color: Colors.transparent,
-                            border: Border.all(color: AppColors.white, width: 3),
+                            border: Border.all(
+                              color: AppColors.white,
+                              width: 3,
+                            ),
                             shape: BoxShape.circle,
                           ),
                           child: Stack(
@@ -153,7 +156,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       const SizedBox(height: 8),
                       Container(
-                          decoration: BoxDecoration(
+                        decoration: BoxDecoration(
                           color: AppColors.secondary,
                           borderRadius: BorderRadius.circular(25),
                         ),
@@ -169,7 +172,9 @@ class _LoginScreenState extends State<LoginScreen> {
                               horizontal: 24,
                               vertical: textFieldPadding,
                             ),
-                            hintStyle: const TextStyle(color: AppColors.white70),
+                            hintStyle: const TextStyle(
+                              color: AppColors.white70,
+                            ),
                           ),
                         ),
                       ),
@@ -191,14 +196,14 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       const SizedBox(height: 8),
                       Container(
-                          decoration: BoxDecoration(
+                        decoration: BoxDecoration(
                           color: AppColors.secondary,
                           borderRadius: BorderRadius.circular(25),
                         ),
                         child: TextField(
                           controller: _passwordController,
                           obscureText: !_isPasswordVisible,
-                            style: TextStyle(
+                          style: TextStyle(
                             color: AppColors.white,
                             fontSize: isMobile ? 14.0 : 16.0,
                           ),
@@ -247,7 +252,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       child: Text(
                         'Login',
-                          style: TextStyle(
+                        style: TextStyle(
                           color: AppColors.white,
                           fontSize: buttonFontSize,
                           fontWeight: FontWeight.w600,
@@ -277,7 +282,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       child: Text(
                         'Sign Up',
-                          style: TextStyle(
+                        style: TextStyle(
                           color: AppColors.white,
                           fontSize: buttonFontSize,
                           fontWeight: FontWeight.w600,

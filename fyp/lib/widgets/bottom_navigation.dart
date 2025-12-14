@@ -16,9 +16,7 @@ class AppBottomNavigation extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: AppColors.bottomNavBackground,
-        boxShadow: [
-          BoxShadow(color: Colors.black26, blurRadius: 6),
-        ],
+        boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 6)],
       ),
       child: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,

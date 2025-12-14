@@ -126,9 +126,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     border: Border.all(color: Colors.white, width: 3),
                     shape: BoxShape.circle,
                   ),
-                  child: CustomPaint(
-                    painter: ClockPainter(time: _currentTime),
-                  ),
+                  child: CustomPaint(painter: ClockPainter(time: _currentTime)),
                 ),
                 SizedBox(height: isMobile ? 12 : 16),
 
