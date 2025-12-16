@@ -5,7 +5,7 @@ import 'screens/signup/signup_screen.dart';
 import 'screens/home/homescreen.dart';
 import 'screens/others/othersscreen.dart';
 import 'screens/news/newsscreen.dart';
-import 'screens/profile/profilescreen.dart';
+import 'screens/destination/destinationsscreen.dart';
 import 'screens/time/timescreen.dart';
 import 'widgets/bottom_navigation.dart';
 import 'config/theme/app_colors.dart';
@@ -61,6 +61,9 @@ class App extends StatelessWidget {
       case AppRoutes.time:
         return MaterialPageRoute(builder: (_) => const TimeScreen());
 
+      case AppRoutes.destinations:
+        return MaterialPageRoute(builder: (_) => const DestinationsScreen());
+
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(
@@ -88,7 +91,7 @@ class _MainLayoutState extends State<MainLayout> {
     TimeScreen(),
     NewsScreen(),
     OthersScreen(),
-    ProfileScreen(),
+    DestinationsScreen(),
   ];
 
   final List<String> _titles = const [
@@ -96,7 +99,7 @@ class _MainLayoutState extends State<MainLayout> {
     'Time',
     'News',
     'Others',
-    'Profile',
+    'Destinations',
   ];
 
   void _onTap(int index) {

@@ -13,27 +13,39 @@ class AppBottomNavigation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.bottomNavBackground,
-        boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 6)],
-      ),
-      child: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        currentIndex: currentIndex,
-        onTap: onTap,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        selectedItemColor: AppColors.bottomNavSelected,
-        unselectedItemColor: AppColors.bottomNavUnselected,
-        showUnselectedLabels: true,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.access_time), label: 'Time'),
-          BottomNavigationBarItem(icon: Icon(Icons.article), label: 'News'),
-          BottomNavigationBarItem(icon: Icon(Icons.category), label: 'Others'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
-        ],
+    return SafeArea(
+      top: false,
+      child: Container(
+        decoration: const BoxDecoration(
+          color: AppColors.bottomNavBackground,
+          boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 6)],
+        ),
+        child: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          currentIndex: currentIndex,
+          onTap: onTap,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          selectedItemColor: AppColors.bottomNavSelected,
+          unselectedItemColor: AppColors.bottomNavUnselected,
+          showUnselectedLabels: true,
+          items: const [
+            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.access_time),
+              label: 'Time',
+            ),
+            BottomNavigationBarItem(icon: Icon(Icons.article), label: 'News'),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.category),
+              label: 'Others',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.map),
+              label: 'Destinations',
+            ),
+          ],
+        ),
       ),
     );
   }

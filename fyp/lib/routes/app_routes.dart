@@ -7,5 +7,5 @@ class AppRoutes {
   static const String others = '/others';
   static const String news = '/news';
   static const String time = '/time';
-  static const String profile = '/profile';
+  static const String destinations = '/destinations';
 }
