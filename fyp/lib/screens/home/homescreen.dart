@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:math' as math;
 
-/// Home Screen - RailPulse Main Screen
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -55,31 +54,31 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundColor: const Color(0xFF8B5A3C),
       body: Column(
         children: [
-          // Top Brown Section
+          // Top Section with brown background
           Container(
             padding: EdgeInsets.symmetric(
-              horizontal: isMobile ? 20 : 40,
-              vertical: isMobile ? 24 : 32,
+              horizontal: isMobile ? 16.0 : 32.0,
+              vertical: isMobile ? 20.0 : 32.0,
             ),
             child: Column(
               children: [
-                // Welcome Text
-                Text(
+                // Welcome text
+                const Text(
                   'WELCOME TO RAILPULSE',
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: isMobile ? 16 : 20,
+                    fontSize: 16,
                     fontWeight: FontWeight.w600,
                     letterSpacing: 2,
                   ),
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: isMobile ? 20 : 24),
+                const SizedBox(height: 20),
 
                 // Logo
                 Container(
-                  width: isMobile ? 80 : 100,
-                  height: isMobile ? 80 : 100,
+                  width: 80,
+                  height: 80,
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.white, width: 3),
                     shape: BoxShape.circle,
@@ -88,124 +87,108 @@ class _HomeScreenState extends State<HomeScreen> {
                     alignment: Alignment.center,
                     children: [
                       Container(
-                        width: isMobile ? 65 : 80,
-                        height: isMobile ? 65 : 80,
+                        width: 65,
+                        height: 65,
                         decoration: BoxDecoration(
                           border: Border.all(color: Colors.white, width: 2),
                           shape: BoxShape.circle,
                         ),
                       ),
-                      Icon(
-                        Icons.train,
-                        color: Colors.white,
-                        size: isMobile ? 35 : 40,
-                      ),
+                      const Icon(Icons.train, color: Colors.white, size: 35),
                     ],
                   ),
                 ),
-                SizedBox(height: isMobile ? 12 : 16),
-
-                // RailPulse Text
-                Text(
+                const SizedBox(height: 12),
+                const Text(
                   'RailPulse',
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: isMobile ? 20 : 24,
+                    fontSize: 22,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 1,
                   ),
                 ),
-                SizedBox(height: isMobile ? 24 : 32),
+                const SizedBox(height: 24),
 
                 // Clock
                 Container(
-                  width: isMobile ? 100 : 120,
-                  height: isMobile ? 100 : 120,
+                  width: 100,
+                  height: 100,
                   decoration: BoxDecoration(
-                    border: Border.all(color: Colors.white, width: 3),
+                    border: Border.all(color: Colors.white, width: 2),
                     shape: BoxShape.circle,
                   ),
-                  child: CustomPaint(
-                    painter: ClockPainter(time: _currentTime),
-                  ),
+                  child: CustomPaint(painter: ClockPainter(_currentTime)),
                 ),
-                SizedBox(height: isMobile ? 12 : 16),
+                const SizedBox(height: 12),
 
-                // Time Display
+                // Time
                 Text(
                   _formatTime(_currentTime),
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
-                    fontSize: isMobile ? 20 : 24,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 2,
-                  ),
-                ),
-                SizedBox(height: isMobile ? 4 : 8),
-
-                // Date Display
-                Text(
-                  _formatDate(_currentTime),
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: isMobile ? 14 : 16,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
                     letterSpacing: 1,
                   ),
                 ),
-                SizedBox(height: isMobile ? 20 : 24),
+                const SizedBox(height: 4),
 
-                // Live Train Alerts Button
-                GestureDetector(
-                  onTap: () {
-                    // Navigate to alerts page
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 12,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          'LIVE TRAIN ALERTS',
-                          style: TextStyle(
-                            color: Colors.red.shade600,
-                            fontSize: isMobile ? 14 : 16,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 1.5,
+                // Date
+                Text(
+                  _formatDate(_currentTime),
+                  style: const TextStyle(
+                    color: Colors.white70,
+                    fontSize: 16,
+                    letterSpacing: 1,
+                  ),
+                ),
+                const SizedBox(height: 24),
+
+                // Live Train Alerts Banner
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 12,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'LIVE TRAIN ALERTS',
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 1,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Row(
+                        children: List.generate(
+                          3,
+                          (index) => Padding(
+                            padding: const EdgeInsets.only(left: 4),
+                            child: Icon(
+                              Icons.arrow_forward,
+                              color: Colors.grey.shade800,
+                              size: 20,
+                            ),
                           ),
                         ),
-                        const SizedBox(width: 12),
-                        Icon(
-                          Icons.arrow_forward,
-                          color: Colors.red.shade600,
-                          size: isMobile ? 20 : 24,
-                        ),
-                        Icon(
-                          Icons.arrow_forward,
-                          color: Colors.red.shade600,
-                          size: isMobile ? 20 : 24,
-                        ),
-                        Icon(
-                          Icons.arrow_forward,
-                          color: Colors.red.shade600,
-                          size: isMobile ? 20 : 24,
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ],
             ),
           ),
 
-          // Train Image Section
+          // Bottom Section with train image
           Expanded(
             child: Container(
               width: double.infinity,
@@ -222,10 +205,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    colors: [
-                      const Color(0xFF8B5A3C).withOpacity(0.3),
-                      Colors.black.withOpacity(0.3),
-                    ],
+                    colors: [Colors.transparent, Colors.black.withOpacity(0.3)],
                   ),
                 ),
               ),
@@ -237,69 +217,93 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-/// Custom Clock Painter
+// Custom painter for analog clock
 class ClockPainter extends CustomPainter {
-  final DateTime time;
+  final DateTime dateTime;
 
-  ClockPainter({required this.time});
+  ClockPainter(this.dateTime);
 
   @override
   void paint(Canvas canvas, Size size) {
-    final center = Offset(size.width / 2, size.height / 2);
+    final centerX = size.width / 2;
+    final centerY = size.height / 2;
+    final center = Offset(centerX, centerY);
     final radius = size.width / 2;
 
-    // Draw clock circle markers (12 hour markers)
-    final markerPaint = Paint()
+    final fillBrush = Paint()..color = const Color(0xFF8B5A3C);
+    final outlineBrush = Paint()
       ..color = Colors.white
-      ..strokeWidth = 2
-      ..style = PaintingStyle.fill;
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2;
+
+    canvas.drawCircle(center, radius - 2, fillBrush);
+
+    // Draw hour markers
+    final hourMarkerPaint = Paint()
+      ..color = Colors.white
+      ..strokeWidth = 2;
 
     for (int i = 0; i < 12; i++) {
-      final angle = (i * 30 - 90) * math.pi / 180;
-      final x = center.dx + (radius - 12) * math.cos(angle);
-      final y = center.dy + (radius - 12) * math.sin(angle);
-      canvas.drawCircle(Offset(x, y), 3, markerPaint);
+      final angle = (i * 30 - 90) * (math.pi / 180);
+      final x1 = centerX + (radius - 12) * math.cos(angle);
+      final y1 = centerY + (radius - 12) * math.sin(angle);
+      final x2 = centerX + (radius - 20) * math.cos(angle);
+      final y2 = centerY + (radius - 20) * math.sin(angle);
+      canvas.drawLine(Offset(x1, y1), Offset(x2, y2), hourMarkerPaint);
     }
 
     // Hour hand
     final hourAngle =
-        ((time.hour % 12) * 30 + time.minute * 0.5 - 90) * math.pi / 180;
-    final hourPaint = Paint()
+        ((dateTime.hour % 12 + dateTime.minute / 60) * 30 - 90) *
+        (math.pi / 180);
+    final hourHandPaint = Paint()
       ..color = Colors.white
       ..strokeWidth = 4
       ..strokeCap = StrokeCap.round;
-
     canvas.drawLine(
       center,
       Offset(
-        center.dx + (radius * 0.4) * math.cos(hourAngle),
-        center.dy + (radius * 0.4) * math.sin(hourAngle),
+        centerX + (radius - 35) * math.cos(hourAngle),
+        centerY + (radius - 35) * math.sin(hourAngle),
       ),
-      hourPaint,
+      hourHandPaint,
     );
 
     // Minute hand
-    final minuteAngle = (time.minute * 6 - 90) * math.pi / 180;
-    final minutePaint = Paint()
+    final minuteAngle = (dateTime.minute * 6 - 90) * (math.pi / 180);
+    final minuteHandPaint = Paint()
       ..color = Colors.white
       ..strokeWidth = 3
       ..strokeCap = StrokeCap.round;
-
     canvas.drawLine(
       center,
       Offset(
-        center.dx + (radius * 0.6) * math.cos(minuteAngle),
-        center.dy + (radius * 0.6) * math.sin(minuteAngle),
+        centerX + (radius - 20) * math.cos(minuteAngle),
+        centerY + (radius - 20) * math.sin(minuteAngle),
       ),
-      minutePaint,
+      minuteHandPaint,
+    );
+
+    // Second hand
+    final secondAngle = (dateTime.second * 6 - 90) * (math.pi / 180);
+    final secondHandPaint = Paint()
+      ..color = Colors.white70
+      ..strokeWidth = 2
+      ..strokeCap = StrokeCap.round;
+    canvas.drawLine(
+      center,
+      Offset(
+        centerX + (radius - 15) * math.cos(secondAngle),
+        centerY + (radius - 15) * math.sin(secondAngle),
+      ),
+      secondHandPaint,
     );
 
     // Center dot
-    canvas.drawCircle(center, 5, markerPaint);
+    final centerDotPaint = Paint()..color = Colors.white;
+    canvas.drawCircle(center, 5, centerDotPaint);
   }
 
   @override
-  bool shouldRepaint(ClockPainter oldDelegate) {
-    return oldDelegate.time != time;
-  }
+  bool shouldRepaint(ClockPainter oldDelegate) => true;
 }
