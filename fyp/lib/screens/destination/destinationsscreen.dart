@@ -11,10 +11,7 @@ class DestinationsScreen extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
-              Color(0xFF6D4C41),
-              Color(0xFF5D4037),
-            ],
+            colors: [Color(0xFF6D4C41), Color(0xFF5D4037)],
           ),
         ),
         child: SafeArea(
@@ -31,11 +28,7 @@ class DestinationsScreen extends StatelessWidget {
                         color: Colors.white.withOpacity(0.1),
                         shape: BoxShape.circle,
                       ),
-                      child: Icon(
-                        Icons.train,
-                        size: 48,
-                        color: Colors.white,
-                      ),
+                      child: Icon(Icons.train, size: 48, color: Colors.white),
                     ),
                     SizedBox(height: 16),
                     Text(
@@ -78,7 +71,7 @@ class DestinationsScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              
+
               // Railway Lines Grid
               Expanded(
                 child: Padding(
@@ -165,11 +158,7 @@ class DestinationsScreen extends StatelessWidget {
                 color: Color(0xFF6D4C41).withOpacity(0.1),
                 shape: BoxShape.circle,
               ),
-              child: Icon(
-                icon,
-                size: 36,
-                color: Color(0xFF5D4037),
-              ),
+              child: Icon(icon, size: 36, color: Color(0xFF5D4037)),
             ),
             SizedBox(height: 16),
             Padding(
@@ -198,9 +187,7 @@ class DestinationsScreen extends StatelessWidget {
       SnackBar(
         content: Text('Selected: $lineName'),
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         backgroundColor: Color(0xFF6D4C41),
         duration: Duration(seconds: 2),
       ),
