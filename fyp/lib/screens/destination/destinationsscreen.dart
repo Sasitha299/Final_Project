@@ -114,6 +114,12 @@ class DestinationsScreen extends StatelessWidget {
                       ),
                       _buildLineCard(
                         context,
+                        'EASTERN LINE',
+                        Icons.directions_railway_outlined,
+                        () => _selectLine(context, 'Eastern Line'),
+                      ),
+                      _buildLineCard(
+                        context,
                         'OTHER LINES',
                         Icons.more_horiz,
                         () => _selectLine(context, 'Other Lines'),
