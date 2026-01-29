@@ -13,116 +13,137 @@ class DestinationsScreen extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Color(0xFF6D4C41), Color(0xFF5D4037)],
+            colors: [Color(0xFF4A3728), Color(0xFF2D2416)],
           ),
         ),
         child: SafeArea(
           child: Column(
             children: [
-              // Header Section
+              // Header Section with title
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 24.0),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                  vertical: 20.0,
+                ),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      padding: EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.1),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(Icons.train, size: 48, color: Colors.white),
-                    ),
-                    SizedBox(height: 16),
                     Text(
-                      'WELCOME TO RAILPULSE',
+                      'Explore destinations by',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: 1.2,
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
-                    SizedBox(height: 4),
                     Text(
-                      'RailPulse',
-                      style: TextStyle(
-                        color: Colors.white.withOpacity(0.9),
-                        fontSize: 16,
-                        fontWeight: FontWeight.w300,
-                      ),
-                    ),
-                    SizedBox(height: 16),
-                    Text(
-                      'YOUR JOURNEY',
+                      'railway line',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        letterSpacing: 1.0,
-                      ),
-                    ),
-                    Text(
-                      'BEGINS HERE',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        letterSpacing: 1.0,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
                   ],
                 ),
               ),
 
+              // Search Bar
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                  vertical: 12.0,
+                ),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(24),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 8,
+                        offset: Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: 'What would you like to travel?',
+                      hintStyle: TextStyle(
+                        color: Colors.grey[400],
+                        fontSize: 14,
+                      ),
+                      prefixIcon: Icon(
+                        Icons.search,
+                        color: Color(0xFFFF6B35),
+                        size: 24,
+                      ),
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.symmetric(
+                        vertical: 12,
+                        horizontal: 8,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+
               // Railway Lines Grid
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.all(20.0),
+                  padding: const EdgeInsets.all(16.0),
                   child: GridView.count(
                     crossAxisCount: 2,
-                    mainAxisSpacing: 16,
-                    crossAxisSpacing: 16,
-                    childAspectRatio: 0.95,
+                    mainAxisSpacing: 14,
+                    crossAxisSpacing: 14,
+                    childAspectRatio: 0.9,
                     children: [
-                      _buildLineCard(
+                      _buildImageLineCard(
                         context,
-                        'MAIN LINE',
+                        'Main Line',
+                        'assets/images/main_line.jpg',
                         Icons.train_outlined,
                         () => _selectLine(context, 'Main Line'),
                       ),
-                      _buildLineCard(
+                      _buildImageLineCard(
                         context,
-                        'COASTAL LINE',
-                        Icons.water,
-                        () => _selectLine(context, 'Coastal Line'),
-                      ),
-                      _buildLineCard(
-                        context,
-                        'PUTTALAM LINE',
+                        'Puttalam Line',
+                        'assets/images/puttalam_line.jpg',
                         Icons.landscape_outlined,
                         () => _selectLine(context, 'Puttalam Line'),
                       ),
-                      _buildLineCard(
+                      _buildImageLineCard(
                         context,
-                        'NORTHERN LINE',
+                        'Coastal Line',
+                        'assets/images/coastal_line.jpg',
+                        Icons.water,
+                        () => _selectLine(context, 'Coastal Line'),
+                      ),
+                      _buildImageLineCard(
+                        context,
+                        'Northern Line',
+                        'assets/images/northern_line.jpg',
                         Icons.explore_outlined,
                         () => _selectLine(context, 'Northern Line'),
                       ),
-                      _buildLineCard(
+                      _buildImageLineCard(
                         context,
-                        'KELANI VALLEY LINE',
+                        'Kelani Valley Line',
+                        'assets/images/kelani_line.jpg',
                         Icons.nature_outlined,
                         () => _selectLine(context, 'Kelani Valley Line'),
                       ),
-                      _buildLineCard(
+                      _buildImageLineCard(
                         context,
-                        'EASTERN LINE',
+                        'Eastern Line',
+                        'assets/images/eastern_line.jpg',
                         Icons.directions_railway_outlined,
                         () => _selectLine(context, 'Eastern Line'),
                       ),
-                      _buildLineCard(
+                      _buildImageLineCard(
                         context,
-                        'OTHER LINES',
+                        'Other Lines',
+                        'assets/images/other_lines.jpg',
                         Icons.more_horiz,
                         () => _navigateToOtherLines(context),
                       ),
@@ -137,9 +158,10 @@ class DestinationsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildLineCard(
+  Widget _buildImageLineCard(
     BuildContext context,
     String title,
+    String imagePath,
     IconData icon,
     VoidCallback onTap,
   ) {
@@ -147,43 +169,72 @@ class DestinationsScreen extends StatelessWidget {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: Color(0xFFFFF3E0),
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.2),
+              color: Colors.black.withOpacity(0.3),
               blurRadius: 8,
               offset: Offset(0, 4),
             ),
           ],
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              padding: EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Color(0xFF6D4C41).withOpacity(0.1),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(icon, size: 36, color: Color(0xFF5D4037)),
-            ),
-            SizedBox(height: 16),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12.0),
-              child: Text(
-                title,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  color: Color(0xFF3E2723),
-                  letterSpacing: 0.5,
-                  height: 1.3,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: Stack(
+            children: [
+              // Background with fallback color
+              Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Color(0xFF6D4C41).withOpacity(0.7),
+                      Color(0xFF5D4037).withOpacity(0.9),
+                    ],
+                  ),
+                ),
+                child: Image.asset(
+                  imagePath,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      color: Color(0xFF6D4C41),
+                      child: Icon(
+                        icon,
+                        size: 48,
+                        color: Colors.white.withOpacity(0.3),
+                      ),
+                    );
+                  },
                 ),
               ),
-            ),
-          ],
+              // Semi-transparent overlay
+              Container(
+                decoration: BoxDecoration(color: Colors.black.withOpacity(0.4)),
+              ),
+              // Text overlay
+              Center(
+                child: Text(
+                  title,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 0.5,
+                    shadows: [
+                      Shadow(
+                        color: Colors.black.withOpacity(0.5),
+                        blurRadius: 4,
+                        offset: Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

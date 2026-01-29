@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import '../../routes/app_routes.dart';
 
 class TimeScreen extends StatefulWidget {
   const TimeScreen({super.key});
@@ -9,16 +11,39 @@ class TimeScreen extends StatefulWidget {
 
 class _TimeScreenState extends State<TimeScreen> {
   int _selectedTabIndex = 0;
+  late TextEditingController _departureController;
+  late TextEditingController _destinationController;
+  late DateTime _selectedDate;
+
+  @override
+  void initState() {
+    super.initState();
+    _departureController = TextEditingController();
+    _destinationController = TextEditingController();
+    _selectedDate = DateTime.now();
+  }
+
+  @override
+  void dispose() {
+    _departureController.dispose();
+    _destinationController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Train Schedule'), elevation: 0),
+      appBar: AppBar(
+        title: const Text('Train Schedule'),
+        elevation: 0,
+        backgroundColor: const Color(0xFF0D1B2A),
+        foregroundColor: Colors.white,
+      ),
       body: Column(
         children: [
           // Tab Navigation
           Container(
-            color: Colors.grey[200],
+            color: const Color(0xFF1A2F42),
             child: Row(
               children: [
                 Expanded(
@@ -30,7 +55,7 @@ class _TimeScreenState extends State<TimeScreen> {
                         border: Border(
                           bottom: BorderSide(
                             color: _selectedTabIndex == 0
-                                ? Colors.grey[400]!
+                                ? const Color(0xFF8B6944)
                                 : Colors.transparent,
                             width: 3,
                           ),
@@ -43,8 +68,8 @@ class _TimeScreenState extends State<TimeScreen> {
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                           color: _selectedTabIndex == 0
-                              ? Colors.grey[700]
-                              : Colors.grey[600],
+                              ? const Color(0xFF8B6944)
+                              : const Color(0xFFB8A892),
                         ),
                       ),
                     ),
@@ -59,7 +84,7 @@ class _TimeScreenState extends State<TimeScreen> {
                         border: Border(
                           bottom: BorderSide(
                             color: _selectedTabIndex == 1
-                                ? Colors.grey[400]!
+                                ? const Color(0xFF8B6944)
                                 : Colors.transparent,
                             width: 3,
                           ),
@@ -72,8 +97,8 @@ class _TimeScreenState extends State<TimeScreen> {
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                           color: _selectedTabIndex == 1
-                              ? Colors.grey[700]
-                              : Colors.grey[600],
+                              ? const Color(0xFF8B6944)
+                              : const Color(0xFFB8A892),
                         ),
                       ),
                     ),
@@ -94,74 +119,347 @@ class _TimeScreenState extends State<TimeScreen> {
   }
 
   Widget _buildLiveTrainView() {
-    return ListView(
-      padding: const EdgeInsets.all(16),
-      children: [
-        _buildTrainCard(
-          trainName: 'Express 101',
-          from: 'Central Station',
-          to: 'North Station',
-          departureTime: '14:30',
-          arrivalTime: '15:45',
-          status: 'On Time',
-          statusColor: Colors.green,
+    String formattedDate = DateFormat(
+      'dd/MM/yyyy - EEE',
+    ).format(_selectedDate).toUpperCase();
+
+    return Container(
+      color: const Color(0xFF7A9DC4),
+      child: Column(
+        children: [
+          // Decorative curved container at top
+          Container(
+            decoration: const BoxDecoration(
+              color: Color(0xFF8B6944),
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(32),
+                bottomRight: Radius.circular(32),
+              ),
+            ),
+            padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Date display
+                Text(
+                  formattedDate,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+                const SizedBox(height: 24),
+                // Search form in white rounded container
+                Container(
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF7A9DC4),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Departure Station
+                      Text(
+                        'DEPARTURE STATION',
+                        style: TextStyle(
+                          color: Colors.white.withOpacity(0.9),
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      _buildSearchField(
+                        controller: _departureController,
+                        hintText: 'Search departure station',
+                      ),
+                      const SizedBox(height: 20),
+                      // Destination Station
+                      Text(
+                        'DESTINATION STATION',
+                        style: TextStyle(
+                          color: Colors.white.withOpacity(0.9),
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      _buildSearchField(
+                        controller: _destinationController,
+                        hintText: 'Search destination station',
+                      ),
+                      const SizedBox(height: 24),
+                      // FIND Button
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  'Searching trains from ${_departureController.text} to ${_destinationController.text}',
+                                ),
+                                backgroundColor: const Color(0xFF8B6944),
+                              ),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFFC499A3),
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          child: const Text(
+                            'FIND',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 1,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // Daily Timetable Button
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, AppRoutes.dailyTimeTable);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF8B6944),
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                child: const Text(
+                  'DAILY TIMETABLE >>>',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          const Spacer(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSearchField({
+    required TextEditingController controller,
+    required String hintText,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: TextField(
+        controller: controller,
+        decoration: InputDecoration(
+          hintText: hintText,
+          hintStyle: TextStyle(color: Colors.grey[400], fontSize: 13),
+          border: InputBorder.none,
+          prefixIcon: Icon(Icons.search, color: Colors.grey[400], size: 20),
+          contentPadding: const EdgeInsets.symmetric(vertical: 12),
         ),
-        const SizedBox(height: 12),
-        _buildTrainCard(
-          trainName: 'Local 205',
-          from: 'Central Station',
-          to: 'South Station',
-          departureTime: '14:50',
-          arrivalTime: '15:20',
-          status: 'Delayed',
-          statusColor: Colors.orange,
-        ),
-        const SizedBox(height: 12),
-        _buildTrainCard(
-          trainName: 'Rapid 312',
-          from: 'Central Station',
-          to: 'East Station',
-          departureTime: '15:15',
-          arrivalTime: '16:00',
-          status: 'On Time',
-          statusColor: Colors.green,
-        ),
-      ],
+        style: const TextStyle(fontSize: 13),
+      ),
     );
   }
 
   Widget _buildTimeTableView() {
-    return ListView(
+    String formattedDate = DateFormat(
+      'dd/MM/yyyy - EEE',
+    ).format(_selectedDate).toUpperCase();
+
+    final List<Map<String, dynamic>> trains = [
+      {'trainNo': '675', 'time': '10:05AM', 'route': 'COLOMBO TO BELIATHTHA'},
+      {'trainNo': '0065', 'time': '12:50PM', 'route': 'COLOMBO TO GALLE'},
+      {'trainNo': '675', 'time': '02:45PM', 'route': 'COLOMBO TO ALUTHGAMA'},
+      {'trainNo': '123', 'time': '04:30PM', 'route': 'COLOMBO TO KANDY'},
+      {'trainNo': '456', 'time': '06:15PM', 'route': 'COLOMBO TO MATARA'},
+    ];
+
+    return Container(
+      color: const Color(0xFF8B6944),
+      child: Column(
+        children: [
+          // Date display at top
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+            child: Text(
+              formattedDate,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 0.5,
+              ),
+            ),
+          ),
+          // Train cards list
+          Expanded(
+            child: ListView.builder(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              itemCount: trains.length,
+              itemBuilder: (context, index) {
+                return _buildRealTimeTrainCard(trains[index]);
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRealTimeTrainCard(Map<String, dynamic> train) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      decoration: BoxDecoration(
+        color: const Color(0xFFB8A892),
+        borderRadius: BorderRadius.circular(12),
+      ),
       padding: const EdgeInsets.all(16),
-      children: [
-        _buildTimeTableCard(
-          trainName: 'Express 101',
-          schedule: [
-            {'station': 'Central Station', 'time': '14:30'},
-            {'station': 'Main Stop', 'time': '14:50'},
-            {'station': 'West Junction', 'time': '15:15'},
-            {'station': 'North Station', 'time': '15:45'},
-          ],
-        ),
-        const SizedBox(height: 12),
-        _buildTimeTableCard(
-          trainName: 'Local 205',
-          schedule: [
-            {'station': 'Central Station', 'time': '14:50'},
-            {'station': 'Avenue Stop', 'time': '15:00'},
-            {'station': 'South Station', 'time': '15:20'},
-          ],
-        ),
-        const SizedBox(height: 12),
-        _buildTimeTableCard(
-          trainName: 'Rapid 312',
-          schedule: [
-            {'station': 'Central Station', 'time': '15:15'},
-            {'station': 'Plaza Stop', 'time': '15:35'},
-            {'station': 'East Station', 'time': '16:00'},
-          ],
-        ),
-      ],
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Train number with icon
+          Row(
+            children: [
+              Container(
+                width: 32,
+                height: 32,
+                decoration: BoxDecoration(
+                  color: Colors.grey[700],
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Icons.train, color: Colors.white, size: 18),
+              ),
+              const SizedBox(width: 12),
+              Text(
+                'Train No: ${train['trainNo']}',
+                style: const TextStyle(
+                  color: Color(0xFF3E2723),
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          // Time
+          Text(
+            train['time'],
+            style: const TextStyle(
+              color: Colors.green,
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 4),
+          // Route
+          Text(
+            train['route'],
+            style: const TextStyle(
+              color: Color(0xFF3E2723),
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 12),
+          // Action buttons
+          Row(
+            children: [
+              Expanded(
+                child: ElevatedButton(
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          'Live Station - Train No: ${train['trainNo']}',
+                        ),
+                        backgroundColor: const Color(0xFF8B6944),
+                        duration: const Duration(seconds: 2),
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                  ),
+                  child: const Text(
+                    'LIVE STATION',
+                    style: TextStyle(
+                      color: Color(0xFFD32F2F),
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: ElevatedButton(
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          'Stop Stations - Train No: ${train['trainNo']}',
+                        ),
+                        backgroundColor: const Color(0xFF8B6944),
+                        duration: const Duration(seconds: 2),
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                  ),
+                  child: const Text(
+                    'STOP STATIONS',
+                    style: TextStyle(
+                      color: Color(0xFFD32F2F),
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
@@ -271,76 +569,6 @@ class _TimeScreenState extends State<TimeScreen> {
                   ],
                 ),
               ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTimeTableCard({
-    required String trainName,
-    required List<Map<String, String>> schedule,
-  }) {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              trainName,
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 12),
-            Column(
-              children: List.generate(
-                schedule.length,
-                (index) => Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.blue.withOpacity(0.2),
-                        ),
-                        child: Center(
-                          child: Text(
-                            '${index + 1}',
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.blue,
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Text(
-                          schedule[index]['station']!,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                      Text(
-                        schedule[index]['time']!,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blue,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
             ),
           ],
         ),

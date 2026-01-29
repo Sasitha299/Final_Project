@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:math' as dart_math;
+import '../../routes/app_routes.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -52,307 +53,273 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              const Color(0xFF1A1A2E),
-              const Color(0xFF0F3460),
-              const Color(0xFF16213E),
-            ],
-          ),
-        ),
+        decoration: BoxDecoration(color: Color(0xFFF5F5F5)),
         child: SingleChildScrollView(
           child: Column(
             children: [
-              // Top Section with modern gradient
+              // Top Section - Welcome header
               Container(
+                width: double.infinity,
                 padding: EdgeInsets.symmetric(
                   horizontal: isMobile ? 16.0 : 32.0,
-                  vertical: isMobile ? 30.0 : 40.0,
+                  vertical: isMobile ? 24.0 : 32.0,
                 ),
+                decoration: BoxDecoration(color: Color(0xFFE8E8E8)),
                 child: Column(
                   children: [
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 8),
                     // Welcome text
-                    ShaderMask(
-                      shaderCallback: (bounds) => LinearGradient(
-                        colors: [
-                          Colors.cyan.shade400,
-                          Colors.blue.shade400,
-                        ],
-                      ).createShader(bounds),
-                      child: const Text(
-                        'WELCOME TO RAILPULSE',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: 2.5,
-                        ),
-                        textAlign: TextAlign.center,
+                    const Text(
+                      'WELCOME TO RAILPULSE',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 1.0,
                       ),
+                      textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 28),
-
-                    // Modern Logo with Glassmorphism effect
+                    const SizedBox(height: 16),
+                    // Logo with Glassmorphism effect
                     Container(
-                      width: 100,
-                      height: 100,
+                      width: 70,
+                      height: 70,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [
-                            Colors.cyan.shade400.withOpacity(0.3),
-                            Colors.blue.shade400.withOpacity(0.1),
-                          ],
-                        ),
+                        color: Colors.white.withOpacity(0.9),
                         border: Border.all(
-                          color: Colors.cyan.shade400.withOpacity(0.5),
-                          width: 2,
+                          color: Colors.grey.shade300,
+                          width: 1,
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.cyan.shade400.withOpacity(0.3),
-                            blurRadius: 20,
-                            spreadRadius: 2,
+                            color: Colors.black.withOpacity(0.05),
+                            blurRadius: 10,
+                            spreadRadius: 1,
                           ),
                         ],
                       ),
                       child: Icon(
                         Icons.train,
-                        color: Colors.cyan.shade300,
-                        size: 50,
+                        color: Colors.grey.shade600,
+                        size: 38,
                       ),
                     ),
-                    const SizedBox(height: 16),
-                    ShaderMask(
-                      shaderCallback: (bounds) => LinearGradient(
-                        colors: [
-                          Colors.cyan.shade300,
-                          Colors.blue.shade300,
-                        ],
-                      ).createShader(bounds),
-                      child: const Text(
-                        'RailPulse',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 28,
-                          fontWeight: FontWeight.w800,
-                          letterSpacing: 1.2,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 32),
-
-                    // Modern Clock with glassmorphism
-                    Container(
-                      width: 120,
-                      height: 120,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [
-                            Colors.cyan.shade400.withOpacity(0.15),
-                            Colors.blue.shade400.withOpacity(0.05),
-                          ],
-                        ),
-                        border: Border.all(
-                          color: Colors.cyan.shade400.withOpacity(0.4),
-                          width: 1.5,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.cyan.shade400.withOpacity(0.2),
-                            blurRadius: 30,
-                            spreadRadius: 5,
-                          ),
-                        ],
-                      ),
-                      child: CustomPaint(painter: ClockPainter(_currentTime)),
-                    ),
-                    const SizedBox(height: 20),
-
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 24,
-                        vertical: 12,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.05),
-                        border: Border.all(
-                          color: Colors.cyan.shade400.withOpacity(0.3),
-                          width: 1,
-                        ),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Column(
-                        children: [
-                          ShaderMask(
-                            shaderCallback: (bounds) => LinearGradient(
-                              colors: [
-                                Colors.cyan.shade300,
-                                Colors.blue.shade300,
-                              ],
-                            ).createShader(bounds),
-                            child: Text(
-                              _formatTime(_currentTime),
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 32,
-                                fontWeight: FontWeight.w700,
-                                letterSpacing: 2,
-                                fontFamily: 'monospace',
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            _formatDate(_currentTime),
-                            style: TextStyle(
-                              color: Colors.cyan.shade200.withOpacity(0.7),
-                              fontSize: 14,
-                              letterSpacing: 1.5,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 28),
-
-                    // Modern Live Train Alerts Banner
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 14,
-                      ),
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            Colors.red.shade600.withOpacity(0.2),
-                            Colors.orange.shade600.withOpacity(0.1),
-                          ],
-                        ),
-                        border: Border.all(
-                          color: Colors.red.shade400.withOpacity(0.5),
-                          width: 1,
-                        ),
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.red.shade400.withOpacity(0.2),
-                            blurRadius: 15,
-                            spreadRadius: 1,
-                          ),
-                        ],
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            width: 8,
-                            height: 8,
-                            decoration: BoxDecoration(
-                              color: Colors.red.shade400,
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.red.shade400.withOpacity(0.6),
-                                  blurRadius: 8,
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          const Text(
-                            'LIVE TRAIN ALERTS',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 13,
-                              fontWeight: FontWeight.w700,
-                              letterSpacing: 1.5,
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          Text(
-                            '→',
-                            style: TextStyle(
-                              color: Colors.red.shade300,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ],
+                    const SizedBox(height: 12),
+                    const Text(
+                      'RailPulse',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 0.5,
                       ),
                     ),
                   ],
                 ),
               ),
 
-              // Bottom Section - Modern Card Design
+              // Main Card Section
               Container(
                 margin: EdgeInsets.symmetric(
-                  horizontal: isMobile ? 12.0 : 24.0,
+                  horizontal: isMobile ? 16.0 : 32.0,
                   vertical: 24.0,
                 ),
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.all(0),
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      Colors.cyan.shade600.withOpacity(0.15),
-                      Colors.blue.shade600.withOpacity(0.1),
-                    ],
-                  ),
-                  border: Border.all(
-                    color: Colors.cyan.shade400.withOpacity(0.3),
-                    width: 1,
-                  ),
-                  borderRadius: BorderRadius.circular(20),
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(32),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.cyan.shade400.withOpacity(0.15),
-                      blurRadius: 30,
-                      spreadRadius: 5,
+                      color: Colors.black.withOpacity(0.08),
+                      blurRadius: 20,
+                      spreadRadius: 2,
                     ),
                   ],
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.info_outline,
-                          color: Colors.cyan.shade400,
-                          size: 20,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(32),
+                  child: Column(
+                    children: [
+                      // Clock and time section with background
+                      Container(
+                        width: double.infinity,
+                        height: 280,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage(
+                              'assets/images/train_background.jpg',
+                            ),
+                            fit: BoxFit.cover,
+                            onError: (exception, stackTrace) {},
+                          ),
+                          color: Colors.grey[300],
                         ),
-                        const SizedBox(width: 12),
-                        Text(
-                          'Quick Info',
-                          style: TextStyle(
-                            color: Colors.cyan.shade300,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: 1,
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            // Gradient overlay
+                            Container(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  colors: [
+                                    Colors.black.withOpacity(0.3),
+                                    Colors.black.withOpacity(0.5),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            // Clock
+                            Positioned(
+                              top: 24,
+                              child: Container(
+                                width: 100,
+                                height: 100,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.white.withOpacity(0.9),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.2),
+                                      blurRadius: 10,
+                                      spreadRadius: 2,
+                                    ),
+                                  ],
+                                ),
+                                child: CustomPaint(
+                                  painter: ClockPainter(_currentTime),
+                                ),
+                              ),
+                            ),
+                            // Time and date
+                            Positioned(
+                              bottom: 24,
+                              child: Column(
+                                children: [
+                                  Text(
+                                    _formatTime(_currentTime),
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 42,
+                                      fontWeight: FontWeight.w700,
+                                      letterSpacing: 4,
+                                      fontFamily: 'monospace',
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    _formatDate(_currentTime),
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14,
+                                      letterSpacing: 2,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      // Live Train Alerts Button
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0,
+                          vertical: 20.0,
+                        ),
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(
+                              context,
+                              AppRoutes.liveTrainUpdates,
+                            );
+                          },
+                          child: Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 14,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Color(0xFFFF5252),
+                              borderRadius: BorderRadius.circular(8),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Color(0xFFFF5252).withOpacity(0.3),
+                                  blurRadius: 8,
+                                  offset: Offset(0, 4),
+                                ),
+                              ],
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: const [
+                                Icon(
+                                  Icons.warning,
+                                  color: Colors.white,
+                                  size: 20,
+                                ),
+                                SizedBox(width: 8),
+                                Text(
+                                  'LIVE TRAIN ALERTS',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w700,
+                                    letterSpacing: 1.5,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      'Explore railway routes, check schedules, and plan your journey with RailPulse.',
-                      style: TextStyle(
-                        color: Colors.white.withOpacity(0.8),
-                        fontSize: 14,
-                        height: 1.6,
-                        letterSpacing: 0.5,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              // Quick Info Section
+              Container(
+                margin: EdgeInsets.symmetric(
+                  horizontal: isMobile ? 16.0 : 32.0,
+                  vertical: 8.0,
+                ),
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Color(0xFFFFF5F5),
+                  border: Border.all(color: Color(0xFFFFE8E8), width: 1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.info_outline, color: Colors.grey[600], size: 24),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Quick Info',
+                            style: TextStyle(
+                              color: Colors.grey[800],
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            'Explore railway routes and plan your journey with railpulse',
+                            style: TextStyle(
+                              color: Colors.grey[600],
+                              fontSize: 12,
+                              height: 1.4,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],

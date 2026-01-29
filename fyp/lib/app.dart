@@ -4,9 +4,15 @@ import 'screens/login/login_screen.dart';
 import 'screens/signup/signup_screen.dart';
 import 'screens/home/homescreen.dart';
 import 'screens/others/othersscreen.dart';
+import 'screens/profile/profile_screen.dart';
+import 'screens/about/about_us_screen.dart';
+import 'screens/contact/contact_us_screen.dart';
+import 'screens/emergency/emergency_contacts_screen.dart';
 import 'screens/news/newsscreen.dart';
 import 'screens/destination/destinationsscreen.dart';
 import 'screens/time/timescreen.dart';
+import 'screens/time/daily_timetable_screen.dart';
+import 'screens/home/live_train_updates_screen.dart';
 import 'widgets/bottom_navigation.dart';
 import 'config/theme/app_colors.dart';
 import 'routes/app_routes.dart';
@@ -54,6 +60,28 @@ class App extends StatelessWidget {
 
       case AppRoutes.others:
         return MaterialPageRoute(builder: (_) => const OthersScreen());
+
+      case AppRoutes.profile:
+        return MaterialPageRoute(builder: (_) => const ProfileScreen());
+
+      case AppRoutes.aboutUs:
+        return MaterialPageRoute(builder: (_) => const AboutUsScreen());
+
+      case AppRoutes.contactUs:
+        return MaterialPageRoute(builder: (_) => const ContactUsScreen());
+
+      case AppRoutes.emergencyContacts:
+        return MaterialPageRoute(
+          builder: (_) => const EmergencyContactsScreen(),
+        );
+
+      case AppRoutes.dailyTimeTable:
+        return MaterialPageRoute(builder: (_) => const DailyTimeTableScreen());
+
+      case AppRoutes.liveTrainUpdates:
+        return MaterialPageRoute(
+          builder: (_) => const LiveTrainUpdatesScreen(),
+        );
 
       case AppRoutes.news:
         return MaterialPageRoute(builder: (_) => const NewsScreen());
