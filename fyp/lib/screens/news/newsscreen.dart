@@ -45,7 +45,7 @@ class _NewsScreenState extends State<NewsScreen> {
                         border: Border(
                           bottom: BorderSide(
                             color: _selectedCategoryIndex == index
-                                ? const Color.fromARGB(255, 132, 88, 88)!
+                                ? const Color.fromARGB(255, 132, 88, 88)
                                 : Colors.transparent,
                             width: 3,
                           ),

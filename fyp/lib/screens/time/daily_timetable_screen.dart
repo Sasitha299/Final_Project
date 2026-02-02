@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 /// Shows trains like a GPS/Navigation interface on a road background
 /// SOLID Principles: Single Responsibility, Open/Closed, Dependency Inversion
 class DailyTimeTableScreen extends StatelessWidget {
-  const DailyTimeTableScreen({Key? key}) : super(key: key);
+  const DailyTimeTableScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

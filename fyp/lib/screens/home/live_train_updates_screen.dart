@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 /// Shows real-time train updates with My Trains and Search functionality
 /// SOLID Principles: Single Responsibility, Open/Closed, Dependency Inversion
 class LiveTrainUpdatesScreen extends StatefulWidget {
-  const LiveTrainUpdatesScreen({Key? key}) : super(key: key);
+  const LiveTrainUpdatesScreen({super.key});
 
   @override
   State<LiveTrainUpdatesScreen> createState() => _LiveTrainUpdatesScreenState();

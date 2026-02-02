@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 /// - Interface Segregation: Clean separation of UI building concerns
 /// - Dependency Inversion: Depends on Material Design abstractions
 class EmergencyContactsScreen extends StatelessWidget {
-  const EmergencyContactsScreen({Key? key}) : super(key: key);
+  const EmergencyContactsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

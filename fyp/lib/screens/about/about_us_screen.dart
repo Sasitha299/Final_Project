@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../routes/app_routes.dart';
 
 /// About Us Screen - Project and company information
 /// Follows:
