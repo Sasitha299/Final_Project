@@ -21,36 +21,37 @@ class TimeScreen extends StatelessWidget {
         color: const Color(0xFF1A2F42),
         child: Column(
           children: [
-              Container(
-                padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
-                child: Column(
-                  children: [
-                    _buildNavButton(
-                      context,
-                      label: 'Live Train',
-                      onTap: () {
-                        Navigator.pushNamed(context, AppRoutes.liveTrainSearch);
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    _buildNavButton(
-                      context,
-                      label: 'Time Table',
-                      onTap: () {
-                        Navigator.pushNamed(context, AppRoutes.timeTableSelection);
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    _buildNavButton(
-                      context,
-                      label: 'Daily Time Table',
-                      onTap: () {
-                        Navigator.pushNamed(context, AppRoutes.dailyTimeTable);
-                      },
-                    ),
-                  ],
-                ),
+            // Navigation Buttons
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+              child: Column(
+                children: [
+                  _buildNavButton(
+                    context,
+                    label: 'Live Train',
+                    onTap: () {
+                      Navigator.pushNamed(context, AppRoutes.liveTrainUpdates);
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  _buildNavButton(
+                    context,
+                    label: 'Time Table',
+                    onTap: () {
+                      Navigator.pushNamed(context, '/timeTableSelection');
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  _buildNavButton(
+                    context,
+                    label: 'Daily Time Table',
+                    onTap: () {
+                      Navigator.pushNamed(context, AppRoutes.dailyTimeTable);
+                    },
+                  ),
+                ],
               ),
+            ),
             const Spacer(),
           ],
         ),

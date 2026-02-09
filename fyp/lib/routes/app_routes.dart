@@ -11,6 +11,9 @@ class AppRoutes {
   static const String emergencyContacts = '/emergencyContacts';
   static const String dailyTimeTable = '/dailyTimeTable';
   static const String liveTrainUpdates = '/liveTrainUpdates';
+  static const String liveTrainSearch = '/liveTrainSearch';
+  static const String timeTableSelection = '/timeTableSelection';
+  static const String lineSchedule = '/lineSchedule';
   static const String news = '/news';
   static const String time = '/time';
 

@@ -12,6 +12,9 @@ import 'screens/news/newsscreen.dart';
 import 'screens/destination/destinationsscreen.dart';
 import 'screens/time/timescreen.dart';
 import 'screens/time/daily_timetable_screen.dart';
+import 'screens/time/time_table_selection_screen.dart';
+import 'screens/time/line_schedule_screen.dart';
+import 'screens/time/live_train_search_screen.dart';
 import 'screens/home/live_train_updates_screen.dart';
 import 'widgets/bottom_navigation.dart';
 import 'config/theme/app_colors.dart';
@@ -81,6 +84,22 @@ class App extends StatelessWidget {
       case AppRoutes.liveTrainUpdates:
         return MaterialPageRoute(
           builder: (_) => const LiveTrainUpdatesScreen(),
+        );
+
+      case AppRoutes.liveTrainSearch:
+        return MaterialPageRoute(
+          builder: (_) => const LiveTrainSearchScreen(),
+        );
+
+      case AppRoutes.timeTableSelection:
+        return MaterialPageRoute(
+          builder: (_) => const TimeTableSelectionScreen(),
+        );
+
+      case AppRoutes.lineSchedule:
+        final lineName = settings.arguments as String? ?? 'North Line';
+        return MaterialPageRoute(
+          builder: (_) => LineScheduleScreen(lineName: lineName),
         );
 
       case AppRoutes.news:

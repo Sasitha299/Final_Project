@@ -6,52 +6,53 @@ class ReserveSeatsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      padding: const EdgeInsets.all(16),
-      children: [
-        _buildReservationCard(
-          context: context,
-          trainName: 'Express 101',
-          from: 'Central Station',
-          to: 'North Station',
-          departureTime: '14:30',
-          availableSeats: 45,
-          totalSeats: 120,
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Colors.blue[700]!,
+            Colors.blue[500]!,
+          ],
         ),
-      ],
-    );
-  }
-
-  Widget _buildReservationCard({
-    required BuildContext context,
-    required String trainName,
-    required String from,
-    required String to,
-    required String departureTime,
-    required int availableSeats,
-    required int totalSeats,
-  }) {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Center(
-          child: ElevatedButton(
-            onPressed: () async {
-              final url = Uri.parse(
-                'https://seatreservation.railway.gov.lk/mtktwebslr/',
-              );
-              await launchUrl(url);
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.grey[600],
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(0),
+      ),
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                'Reserve your seats now using below link.',
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.white,
+                ),
+                textAlign: TextAlign.center,
               ),
-              minimumSize: const Size(80, 80),
-            ),
-            child: const Text('Reserve', style: TextStyle(color: Colors.white)),
+              const SizedBox(height: 24),
+              ElevatedButton(
+                onPressed: () async {
+                  final url = Uri.parse(
+                    'https://seatreservation.railway.gov.lk/mtktwebslr/',
+                  );
+                  await launchUrl(url);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  foregroundColor: Colors.blue[700],
+                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                child: const Text(
+                  'Reserve',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ],
           ),
         ),
       ),
