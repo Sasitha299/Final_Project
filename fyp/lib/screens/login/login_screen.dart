@@ -9,10 +9,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _emailController = TextEditingController(
-    text: 'hello@reallygreatsite.com',
-  );
-  final _passwordController = TextEditingController(text: '******');
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
 
   @override
@@ -25,334 +23,252 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
-    final screenWidth = screenSize.width;
     final screenHeight = screenSize.height;
-    final isMobile = screenWidth < 600;
-    final isTablet = screenWidth >= 600 && screenWidth < 1200;
 
-    // Responsive values
-    final horizontalPadding = isMobile
-        ? 32.0
-        : isTablet
-        ? 48.0
-        : 64.0;
-    final topSpacing = isMobile ? 60.0 : 80.0;
-    final logoSize = isMobile ? 70.0 : 90.0;
-    final logoInnerSize = logoSize * 0.75;
-    final logoIconSize = logoSize * 0.45;
-    final titleFontSize = isMobile
-        ? 36.0
-        : isTablet
-        ? 44.0
-        : 52.0;
-    final subtitleFontSize = isMobile ? 14.0 : 16.0;
-    final labelFontSize = isMobile ? 13.0 : 14.0;
-    final textFieldPadding = isMobile ? 14.0 : 18.0;
-    final buttonFontSize = isMobile ? 16.0 : 18.0;
-    final buttonPadding = isMobile ? 14.0 : 18.0;
-    final spaceBetweenFields = isMobile ? 20.0 : 24.0;
+    // Custom colors from image
+    const designBrown = Color(0xFF4A3228);
 
     return Scaffold(
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/images/train_background.jpg'),
-            fit: BoxFit.cover,
-          ),
-        ),
-        child: Container(
-          // Gradient overlay for better text readability
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Colors.black.withOpacity(0.2),
-                Colors.black.withOpacity(0.25),
-                Colors.black.withOpacity(0.35),
-              ],
+      body: Stack(
+        children: [
+          // Background Image
+          Container(
+            width: double.infinity,
+            height: double.infinity,
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/train_background.jpg'),
+                fit: BoxFit.cover,
+                alignment: Alignment.center,
+              ),
             ),
           ),
-          child: SafeArea(
+          // Gradient Overlay
+          Container(
+            width: double.infinity,
+            height: double.infinity,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.black.withOpacity(0.1),
+                  Colors.transparent,
+                  Colors.black.withOpacity(0.6),
+                ],
+              ),
+            ),
+          ),
+          // Main Content
+          SafeArea(
             child: SingleChildScrollView(
               child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  minHeight:
-                      screenHeight -
-                      MediaQuery.of(context).padding.top -
-                      MediaQuery.of(context).padding.bottom,
-                ),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+                constraints: BoxConstraints(minHeight: screenHeight),
+                child: IntrinsicHeight(
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      SizedBox(height: topSpacing),
-                      // Logo
-                      Center(
-                        child: Column(
-                          children: [
-                            Container(
-                              width: logoSize,
-                              height: logoSize,
+                      const SizedBox(height: 30),
+                      // Top Logo Section
+                      Column(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: Colors.white,
+                                width: 2.5,
+                              ),
+                            ),
+                            child: Container(
+                              padding: const EdgeInsets.all(5),
                               decoration: BoxDecoration(
-                                color: Colors.transparent,
+                                shape: BoxShape.circle,
                                 border: Border.all(
                                   color: Colors.white,
-                                  width: 2.5,
+                                  width: 1.5,
                                 ),
-                                shape: BoxShape.circle,
                               ),
-                              child: Stack(
-                                alignment: Alignment.center,
-                                children: [
-                                  Container(
-                                    width: logoInnerSize,
-                                    height: logoInnerSize,
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: Colors.white,
-                                        width: 1.5,
-                                      ),
-                                      shape: BoxShape.circle,
-                                    ),
-                                  ),
-                                  Icon(
-                                    Icons.train,
-                                    color: Colors.white,
-                                    size: logoIconSize,
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(height: 12),
-                            Text(
-                              'RailPulse',
-                              style: TextStyle(
+                              child: const Icon(
+                                Icons.train,
                                 color: Colors.white,
-                                fontSize: isMobile ? 20.0 : 24.0,
-                                fontWeight: FontWeight.w600,
-                                letterSpacing: 2,
+                                size: 35,
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                          const SizedBox(height: 8),
+                          const Text(
+                            'RailPulse',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 1.5,
+                            ),
+                          ),
+                          const SizedBox(height: 15),
+                          const Text(
+                            'w e l c o m e   t o   R a i l p u l s e',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ],
                       ),
-                      SizedBox(height: 16),
-                      // Welcome text
-                      Text(
-                        'welcome to Railpulse',
-                        style: TextStyle(
-                          color: Colors.white.withOpacity(0.9),
-                          fontSize: isMobile ? 13.0 : 15.0,
-                          fontWeight: FontWeight.w300,
-                          letterSpacing: 2,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      SizedBox(height: isMobile ? 60.0 : 80.0),
-                      // Login Title
-                      Text(
+
+                      const Spacer(flex: 2),
+
+                      // Login Header
+                      const Text(
                         'Login',
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: titleFontSize,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 1,
+                          fontSize: 60,
+                          fontWeight: FontWeight.w400,
                         ),
-                        textAlign: TextAlign.center,
                       ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'sign in to continue.',
+                      const Text(
+                        'sign in to countinue.', // Matching the typo "countinue" from the image
                         style: TextStyle(
-                          color: Colors.white.withOpacity(0.85),
-                          fontSize: subtitleFontSize,
+                          color: Colors.white,
+                          fontSize: 22,
                           fontWeight: FontWeight.w300,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      SizedBox(height: isMobile ? 40.0 : 50.0),
-                      // Email Field
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Color(0xFF8B6944).withOpacity(0.8),
-                          borderRadius: BorderRadius.circular(30),
-                          border: Border.all(
-                            color: Color(0xFF8B6944).withOpacity(0.5),
-                            width: 1,
-                          ),
-                        ),
-                        child: TextField(
-                          controller: _emailController,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: isMobile ? 14.0 : 16.0,
-                          ),
-                          decoration: InputDecoration(
-                            hintText: 'Email',
-                            hintStyle: TextStyle(
-                              color: Colors.white.withOpacity(0.7),
-                              fontSize: isMobile ? 14.0 : 16.0,
-                            ),
-                            border: InputBorder.none,
-                            contentPadding: EdgeInsets.symmetric(
-                              horizontal: 24,
-                              vertical: textFieldPadding,
-                            ),
-                          ),
+                          letterSpacing: 0.5,
                         ),
                       ),
-                      SizedBox(height: spaceBetweenFields),
-                      // Password Field
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Color(0xFF8B6944).withOpacity(0.8),
-                          borderRadius: BorderRadius.circular(30),
-                          border: Border.all(
-                            color: Color(0xFF8B6944).withOpacity(0.5),
-                            width: 1,
-                          ),
-                        ),
-                        child: TextField(
-                          controller: _passwordController,
-                          obscureText: !_isPasswordVisible,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: isMobile ? 14.0 : 16.0,
-                          ),
-                          decoration: InputDecoration(
-                            hintText: 'Password',
-                            hintStyle: TextStyle(
-                              color: Colors.white.withOpacity(0.7),
-                              fontSize: isMobile ? 14.0 : 16.0,
+
+                      const Spacer(flex: 3),
+
+                      // Input Fields and Button
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 50),
+                        child: Column(
+                          children: [
+                            // Email
+                            _buildInputField(
+                              controller: _emailController,
+                              hint: 'Email',
+                              color: designBrown,
                             ),
-                            border: InputBorder.none,
-                            contentPadding: EdgeInsets.symmetric(
-                              horizontal: 24,
-                              vertical: textFieldPadding,
-                            ),
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                _isPasswordVisible
-                                    ? Icons.visibility
-                                    : Icons.visibility_off,
-                                color: Colors.white.withOpacity(0.7),
-                                size: 20,
-                              ),
-                              onPressed: () {
+                            const SizedBox(height: 20),
+                            // Password
+                            _buildInputField(
+                              controller: _passwordController,
+                              hint: 'Password',
+                              color: designBrown,
+                              isPassword: true,
+                              isPasswordVisible: _isPasswordVisible,
+                              onToggleVisibility: () {
                                 setState(() {
                                   _isPasswordVisible = !_isPasswordVisible;
                                 });
                               },
                             ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: isMobile ? 32.0 : 40.0),
-                      // Login Button
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Color(0xFF8B6944),
-                          borderRadius: BorderRadius.circular(30),
-                          border: Border.all(
-                            color: Color(0xFF8B6944),
-                            width: 1,
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.3),
-                              blurRadius: 8,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
-                        ),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.pushReplacementNamed(
-                              context,
-                              AppRoutes.home,
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.transparent,
-                            shadowColor: Colors.transparent,
-                            padding: EdgeInsets.symmetric(
-                              vertical: buttonPadding,
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                          ),
-                          child: Text(
-                            'Login',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: buttonFontSize,
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: 1,
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: isMobile ? 20.0 : 24.0),
-                      // Forgot Password
-                      Center(
-                        child: TextButton(
-                          onPressed: () {
-                            // Handle forgot password
-                          },
-                          child: Text(
-                            'Forgot Password',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: isMobile ? 13.0 : 14.0,
-                              fontWeight: FontWeight.w500,
-                              decoration: TextDecoration.underline,
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: isMobile ? 8.0 : 12.0),
-                      // Sign Up
-                      Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Sign up',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: isMobile ? 13.0 : 14.0,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            SizedBox(width: 4),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.pushNamed(context, AppRoutes.signup);
-                              },
-                              child: Text(
-                                '>>',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: isMobile ? 13.0 : 14.0,
-                                  fontWeight: FontWeight.bold,
+                            const SizedBox(height: 20),
+                            // Login Button
+                            SizedBox(
+                              width: double.infinity,
+                              height: 60,
+                              child: ElevatedButton(
+                                onPressed: () => Navigator.pushReplacementNamed(
+                                  context,
+                                  AppRoutes.home,
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: designBrown,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(35),
+                                  ),
+                                  elevation: 0,
+                                ),
+                                child: const Text(
+                                  'Login',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w400,
+                                  ),
                                 ),
                               ),
                             ),
                           ],
                         ),
                       ),
-                      SizedBox(height: isMobile ? 20.0 : 30.0),
+
+                      const SizedBox(height: 25),
+
+                      // Footer Links
+                      const Text(
+                        'Forgot Password',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      GestureDetector(
+                        onTap: () =>
+                            Navigator.pushNamed(context, AppRoutes.signup),
+                        child: const Text(
+                          'sign up >>',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 50),
                     ],
                   ),
                 ),
               ),
             ),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInputField({
+    required TextEditingController controller,
+    required String hint,
+    required Color color,
+    bool isPassword = false,
+    bool isPasswordVisible = false,
+    VoidCallback? onToggleVisibility,
+  }) {
+    return Container(
+      height: 60,
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.9),
+        borderRadius: BorderRadius.circular(35),
+      ),
+      child: TextField(
+        controller: controller,
+        obscureText: isPassword && !isPasswordVisible,
+        textAlign: TextAlign.center,
+        style: const TextStyle(color: Colors.white, fontSize: 18),
+        decoration: InputDecoration(
+          hintText: hint,
+          hintStyle: const TextStyle(color: Colors.white70, fontSize: 18),
+          border: InputBorder.none,
+          contentPadding: isPassword
+              ? const EdgeInsets.only(left: 48)
+              : EdgeInsets.zero,
+          suffixIcon: isPassword
+              ? IconButton(
+                  icon: Icon(
+                    isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                    color: Colors.white70,
+                    size: 22,
+                  ),
+                  onPressed: onToggleVisibility,
+                )
+              : null,
         ),
       ),
     );
