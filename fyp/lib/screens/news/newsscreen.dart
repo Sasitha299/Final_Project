@@ -15,7 +15,7 @@ class _NewsScreenState extends State<NewsScreen> {
   int _selectedCategoryIndex = 0;
 
   final List<String> categories = [
-    'Main News',
+    'Local News',
     'Live Train Alerts',
     'Reserve Seats',
     'Ticket Prices',
