@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../routes/app_routes.dart';
+import '../../api/user.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -12,6 +13,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -172,10 +174,57 @@ class _LoginScreenState extends State<LoginScreen> {
                               width: double.infinity,
                               height: 60,
                               child: ElevatedButton(
-                                onPressed: () => Navigator.pushReplacementNamed(
-                                  context,
-                                  AppRoutes.home,
-                                ),
+                                onPressed: _isLoading
+                                    ? null
+                                    : () async {
+                                        final email = _emailController.text
+                                            .trim();
+                                        final password =
+                                            _passwordController.text;
+
+                                        if (email.isEmpty || password.isEmpty) {
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
+                                            const SnackBar(
+                                              content: Text(
+                                                'Please enter email and password',
+                                              ),
+                                            ),
+                                          );
+                                          return;
+                                        }
+
+                                        setState(() => _isLoading = true);
+                                        final result = await loginUser(
+                                          email: email,
+                                          password: password,
+                                        );
+                                        setState(() => _isLoading = false);
+
+                                        if (result['success'] == true) {
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
+                                            const SnackBar(
+                                              content: Text('Login successful'),
+                                            ),
+                                          );
+                                          Navigator.pushReplacementNamed(
+                                            context,
+                                            AppRoutes.home,
+                                          );
+                                        } else {
+                                          final msg =
+                                              result['message']?.toString() ??
+                                              'Login failed';
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
+                                            SnackBar(content: Text(msg)),
+                                          );
+                                        }
+                                      },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: designBrown,
                                   shape: RoundedRectangleBorder(
@@ -183,14 +232,26 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                   elevation: 0,
                                 ),
-                                child: const Text(
-                                  'Login',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
+                                child: _isLoading
+                                    ? const SizedBox(
+                                        width: 20,
+                                        height: 20,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2.0,
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                                Colors.white,
+                                              ),
+                                        ),
+                                      )
+                                    : const Text(
+                                        'Login',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      ),
                               ),
                             ),
                           ],

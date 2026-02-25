@@ -49,3 +49,41 @@ Future<Map<String, dynamic>> signupUser({
     return {'success': false, 'message': e.toString()};
   }
 }
+
+/// Sends login request to backend.
+/// Returns a map: {'success': bool, 'message': String?, 'data': dynamic}
+Future<Map<String, dynamic>> loginUser({
+  required String email,
+  required String password,
+}) async {
+  final uri = Uri.parse('${baseurl}api/auth/login');
+  final body = jsonEncode({'email': email, 'password': password});
+
+  try {
+    final res = await http.post(
+      uri,
+      headers: {'Content-Type': 'application/json'},
+      body: body,
+    );
+
+    final decoded = res.body.isNotEmpty ? jsonDecode(res.body) : null;
+    if (res.statusCode >= 200 && res.statusCode < 300) {
+      return {'success': true, 'data': decoded};
+    }
+
+    return {
+      'success': false,
+      'message': decoded is Map && decoded['message'] != null
+          ? decoded['message'].toString()
+          : res.reasonPhrase ?? 'Login failed',
+    };
+  } on SocketException catch (_) {
+    return {
+      'success': false,
+      'message':
+          'Network error: unable to reach server. Check your internet or server URL.',
+    };
+  } catch (e) {
+    return {'success': false, 'message': e.toString()};
+  }
+}
