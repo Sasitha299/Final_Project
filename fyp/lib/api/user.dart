@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:http/http.dart' as http;
 
-import '../config/env.dart';
+import '../config/conection.dart';
 
 /// Sends signup request to backend.
 /// Returns a map: {'success': bool, 'message': String?, 'data': dynamic}
