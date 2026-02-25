@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../routes/app_routes.dart';
+import '../../api/user.dart';
 
 /// Signup Screen - User registration page
 /// Follows Single Responsibility Principle (SRP) - only handles signup UI
@@ -27,7 +28,7 @@ class _SignupScreenState extends State<SignupScreen> {
     super.dispose();
   }
 
-  void _handleSignup() {
+  Future<void> _handleSignup() async {
     // Validate inputs
     if (_nameController.text.isEmpty ||
         _emailController.text.isEmpty ||
@@ -46,8 +47,24 @@ class _SignupScreenState extends State<SignupScreen> {
       return;
     }
 
-    // Navigate to home after signup
-    Navigator.pushReplacementNamed(context, AppRoutes.home);
+    // Call backend signup
+    final result = await signupUser(
+      fullName: _nameController.text.trim(),
+      email: _emailController.text.trim(),
+      password: _passwordController.text,
+      confirmPassword: _confirmPasswordController.text,
+    );
+
+    if (result['success'] == true) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Account created successfully')),
+      );
+      // Navigate to login screen
+      Navigator.pushReplacementNamed(context, AppRoutes.login);
+    } else {
+      final msg = result['message']?.toString() ?? 'Signup failed';
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+    }
   }
 
   @override

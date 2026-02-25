@@ -87,9 +87,7 @@ class App extends StatelessWidget {
         );
 
       case AppRoutes.liveTrainSearch:
-        return MaterialPageRoute(
-          builder: (_) => const LiveTrainSearchScreen(),
-        );
+        return MaterialPageRoute(builder: (_) => const LiveTrainSearchScreen());
 
       case AppRoutes.timeTableSelection:
         return MaterialPageRoute(
