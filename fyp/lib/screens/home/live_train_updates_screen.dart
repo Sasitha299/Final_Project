@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../api/train.dart';
+
 /// Live Train Updates Screen
 /// Shows real-time train updates with My Trains and Search functionality
 /// SOLID Principles: Single Responsibility, Open/Closed, Dependency Inversion
@@ -14,10 +16,15 @@ class _LiveTrainUpdatesScreenState extends State<LiveTrainUpdatesScreen> {
   int _selectedTabIndex = 0;
   late TextEditingController _searchController;
 
+  bool _isLoading = true;
+  String? _errorMessage;
+  List<Train> _trains = [];
+
   @override
   void initState() {
     super.initState();
     _searchController = TextEditingController();
+    _loadTrains();
   }
 
   @override
@@ -26,28 +33,29 @@ class _LiveTrainUpdatesScreenState extends State<LiveTrainUpdatesScreen> {
     super.dispose();
   }
 
+  Future<void> _loadTrains() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    final result = await fetchAllTrains();
+    if (result['success'] == true && result['data'] is List<Train>) {
+      setState(() {
+        _trains = result['data'] as List<Train>;
+        _isLoading = false;
+      });
+    } else {
+      setState(() {
+        _errorMessage =
+            result['message']?.toString() ?? 'Failed to load trains';
+        _isLoading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final List<Map<String, dynamic>> trainUpdates = [
-      {
-        'trainNo': '2345',
-        'time': '05:05AM',
-        'route': 'ANURADHAPURA TO BELIATHTHA',
-      },
-      {
-        'trainNo': '2345',
-        'time': '05:05AM',
-        'route': 'ANURADHAPURA TO BELIATHTHA',
-      },
-      {
-        'trainNo': '2345',
-        'time': '05:05AM',
-        'route': 'ANURADHAPURA TO BELIATHTHA',
-      },
-      {'trainNo': '0675', 'time': '08:30AM', 'route': 'COLOMBO TO GALLE'},
-      {'trainNo': '0123', 'time': '10:15AM', 'route': 'COLOMBO TO KANDY'},
-    ];
-
     return Scaffold(
       body: Column(
         children: [
@@ -161,7 +169,7 @@ class _LiveTrainUpdatesScreenState extends State<LiveTrainUpdatesScreen> {
           // Content area
           Expanded(
             child: _selectedTabIndex == 0
-                ? _buildMyTrainsView(trainUpdates)
+                ? _buildMyTrainsView()
                 : _buildSearchView(),
           ),
         ],
@@ -169,32 +177,98 @@ class _LiveTrainUpdatesScreenState extends State<LiveTrainUpdatesScreen> {
     );
   }
 
-  Widget _buildMyTrainsView(List<Map<String, dynamic>> trainUpdates) {
+  Widget _buildMyTrainsView() {
+    if (_isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (_errorMessage != null) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                _errorMessage!,
+                textAlign: TextAlign.center,
+                style: const TextStyle(color: Colors.red, fontSize: 14),
+              ),
+              const SizedBox(height: 12),
+              ElevatedButton(
+                onPressed: _loadTrains,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF8B6944),
+                ),
+                child: const Text('Retry'),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    if (_trains.isEmpty) {
+      return const Center(
+        child: Text(
+          'No trains available.',
+          style: TextStyle(color: Colors.grey, fontSize: 14),
+        ),
+      );
+    }
+
     return Container(
       color: Colors.white,
       child: ListView.builder(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-        itemCount: trainUpdates.length,
+        itemCount: _trains.length,
         itemBuilder: (context, index) {
-          return _buildTrainUpdateCard(trainUpdates[index]);
+          return _buildTrainUpdateCard(_trains[index]);
         },
       ),
     );
   }
 
   Widget _buildSearchView() {
-    final List<Map<String, dynamic>> searchResults =
-        _searchController.text.isEmpty
+    if (_isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (_errorMessage != null) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                _errorMessage!,
+                textAlign: TextAlign.center,
+                style: const TextStyle(color: Colors.red, fontSize: 14),
+              ),
+              const SizedBox(height: 12),
+              ElevatedButton(
+                onPressed: _loadTrains,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF8B6944),
+                ),
+                child: const Text('Retry'),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    final query = _searchController.text.trim().toLowerCase();
+    final List<Train> searchResults = query.isEmpty
         ? []
-        : [
-            {
-              'trainNo': '2345',
-              'time': '05:05AM',
-              'route': 'ANURADHAPURA TO BELIATHTHA',
-            },
-            {'trainNo': '0675', 'time': '08:30AM', 'route': 'COLOMBO TO GALLE'},
-            {'trainNo': '0123', 'time': '10:15AM', 'route': 'COLOMBO TO KANDY'},
-          ];
+        : _trains.where((train) {
+            final normalized =
+                '${train.trainNumber} ${train.trainName} ${train.route}'
+                    .toLowerCase();
+            return normalized.contains(query);
+          }).toList();
 
     return Container(
       color: Colors.white,
@@ -219,12 +293,21 @@ class _LiveTrainUpdatesScreenState extends State<LiveTrainUpdatesScreen> {
               },
             ),
           ),
-          if (_searchController.text.isEmpty)
+          if (query.isEmpty)
             Expanded(
               child: Center(
                 child: Text(
                   'Enter train number or route to search',
                   style: const TextStyle(color: Colors.grey, fontSize: 14),
+                ),
+              ),
+            )
+          else if (searchResults.isEmpty)
+            const Expanded(
+              child: Center(
+                child: Text(
+                  'No trains match your search.',
+                  style: TextStyle(color: Colors.grey, fontSize: 14),
                 ),
               ),
             )
@@ -246,7 +329,7 @@ class _LiveTrainUpdatesScreenState extends State<LiveTrainUpdatesScreen> {
     );
   }
 
-  Widget _buildSearchResultCard(Map<String, dynamic> train) {
+  Widget _buildSearchResultCard(Train train) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
@@ -274,7 +357,7 @@ class _LiveTrainUpdatesScreenState extends State<LiveTrainUpdatesScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Train No: ${train['trainNo']}',
+                    'Train No: ${train.trainNumber}',
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 14,
@@ -283,7 +366,7 @@ class _LiveTrainUpdatesScreenState extends State<LiveTrainUpdatesScreen> {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    train['time'],
+                    train.departureTime,
                     style: const TextStyle(color: Colors.white70, fontSize: 12),
                   ),
                 ],
@@ -293,7 +376,7 @@ class _LiveTrainUpdatesScreenState extends State<LiveTrainUpdatesScreen> {
           const SizedBox(height: 12),
           // Route
           Text(
-            train['route'],
+            train.route,
             style: const TextStyle(color: Colors.white, fontSize: 12),
           ),
           const SizedBox(height: 14),
@@ -305,7 +388,7 @@ class _LiveTrainUpdatesScreenState extends State<LiveTrainUpdatesScreen> {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(
-                      'Live Station - Train No: ${train['trainNo']}',
+                      'Live Station - Train No: ${train.trainNumber}',
                     ),
                     backgroundColor: const Color(0xFF8B6944),
                     duration: const Duration(seconds: 2),
@@ -376,7 +459,7 @@ class _LiveTrainUpdatesScreenState extends State<LiveTrainUpdatesScreen> {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(
-                      'Stop Stations - Train No: ${train['trainNo']}',
+                      'Stop Stations - Train No: ${train.trainNumber}',
                     ),
                     backgroundColor: const Color(0xFF8B6944),
                     duration: const Duration(seconds: 2),
@@ -406,7 +489,7 @@ class _LiveTrainUpdatesScreenState extends State<LiveTrainUpdatesScreen> {
     );
   }
 
-  Widget _buildTrainUpdateCard(Map<String, dynamic> train) {
+  Widget _buildTrainUpdateCard(Train train) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
@@ -431,7 +514,7 @@ class _LiveTrainUpdatesScreenState extends State<LiveTrainUpdatesScreen> {
               ),
               const SizedBox(width: 12),
               Text(
-                'Train No: ${train['trainNo']}',
+                'Train No: ${train.trainNumber}',
                 style: const TextStyle(
                   color: Color(0xFF424242),
                   fontSize: 14,
@@ -443,7 +526,7 @@ class _LiveTrainUpdatesScreenState extends State<LiveTrainUpdatesScreen> {
           const SizedBox(height: 10),
           // Time
           Text(
-            train['time'],
+            train.departureTime,
             style: const TextStyle(
               color: Color(0xFF424242),
               fontSize: 13,
@@ -453,7 +536,7 @@ class _LiveTrainUpdatesScreenState extends State<LiveTrainUpdatesScreen> {
           const SizedBox(height: 4),
           // Route
           Text(
-            train['route'],
+            train.route,
             style: const TextStyle(color: Color(0xFF424242), fontSize: 12),
           ),
           const SizedBox(height: 10),
@@ -466,7 +549,7 @@ class _LiveTrainUpdatesScreenState extends State<LiveTrainUpdatesScreen> {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(
-                          'Live Station - Train No: ${train['trainNo']}',
+                          'Live Station - Train No: ${train.trainNumber}',
                         ),
                         backgroundColor: const Color(0xFF8B6944),
                         duration: const Duration(seconds: 2),
@@ -498,7 +581,7 @@ class _LiveTrainUpdatesScreenState extends State<LiveTrainUpdatesScreen> {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(
-                          'Stop Stations - Train No: ${train['trainNo']}',
+                          'Stop Stations - Train No: ${train.trainNumber}',
                         ),
                         backgroundColor: const Color(0xFF8B6944),
                         duration: const Duration(seconds: 2),
