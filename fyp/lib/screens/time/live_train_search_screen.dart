@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../api/train.dart';
+
 /// Live Train Search Screen
 /// Shows search interface for finding live trains by departure/destination stations
 class LiveTrainSearchScreen extends StatefulWidget {
@@ -14,7 +16,12 @@ class _LiveTrainSearchScreenState extends State<LiveTrainSearchScreen> {
   late TextEditingController _departureController;
   late TextEditingController _destinationController;
   late DateTime _selectedDate;
+
   bool _showResults = false;
+  bool _isLoading = true;
+  String? _errorMessage;
+  List<Train> _allTrains = [];
+  List<Train> _searchResults = [];
 
   @override
   void initState() {
@@ -22,6 +29,27 @@ class _LiveTrainSearchScreenState extends State<LiveTrainSearchScreen> {
     _departureController = TextEditingController();
     _destinationController = TextEditingController();
     _selectedDate = DateTime.now();
+    _loadTrains();
+  }
+
+  Future<void> _loadTrains() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    final result = await fetchAllTrains();
+    if (result['success'] == true && result['data'] is List<Train>) {
+      setState(() {
+        _allTrains = result['data'] as List<Train>;
+        _isLoading = false;
+      });
+    } else {
+      setState(() {
+        _errorMessage = result['message']?.toString() ?? 'Failed to load trains';
+        _isLoading = false;
+      });
+    }
   }
 
   @override
@@ -31,34 +59,28 @@ class _LiveTrainSearchScreenState extends State<LiveTrainSearchScreen> {
     super.dispose();
   }
 
+  void _performSearch() {
+    final queryDeparture = _departureController.text.trim().toLowerCase();
+    final queryDestination = _destinationController.text.trim().toLowerCase();
+
+    setState(() {
+      _showResults = true;
+      _searchResults = _allTrains.where((train) {
+        final dep = train.departure.toLowerCase();
+        final dest = train.destination.toLowerCase();
+        return dep.contains(queryDeparture) && dest.contains(queryDestination);
+      }).toList();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     String formattedDate = DateFormat('dd / MM / yyyy - EEE')
         .format(_selectedDate)
         .toUpperCase();
 
-    final searchResults = [
-      {
-        'trainNo': '001',
-        'time': '06:30AM',
-        'route': '${_departureController.text} → ${_destinationController.text}',
-      },
-      {
-        'trainNo': '0065',
-        'time': '12:50PM',
-        'route': '${_departureController.text} → ${_destinationController.text}',
-      },
-      {
-        'trainNo': '675',
-        'time': '02:45PM',
-        'route': '${_departureController.text} → ${_destinationController.text}',
-      },
-      {
-        'trainNo': '123',
-        'time': '04:30PM',
-        'route': '${_departureController.text} → ${_destinationController.text}',
-      },
-    ];
+    // Keep UI reactive; search results are updated on button press.
+    // No side effects here.
 
     return Scaffold(
       appBar: AppBar(
@@ -167,11 +189,10 @@ class _LiveTrainSearchScreenState extends State<LiveTrainSearchScreen> {
                               duration: Duration(seconds: 2),
                             ),
                           );
-                        } else {
-                          setState(() {
-                            _showResults = true;
-                          });
+                          return;
                         }
+
+                        _performSearch();
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFFC499A3),
@@ -196,20 +217,54 @@ class _LiveTrainSearchScreenState extends State<LiveTrainSearchScreen> {
               ),
             ),
             // Search Results
-            if (_showResults)
+            if (_isLoading)
+              const Expanded(
+                child: Center(child: CircularProgressIndicator()),
+              )
+            else if (_errorMessage != null)
+              Expanded(
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          _errorMessage!,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(color: Colors.red, fontSize: 14),
+                        ),
+                        const SizedBox(height: 12),
+                        ElevatedButton(
+                          onPressed: _loadTrains,
+                          child: const Text('Retry'),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              )
+            else if (_showResults)
               Expanded(
                 child: Container(
                   color: Colors.white,
-                  child: ListView.builder(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 20,
-                    ),
-                    itemCount: searchResults.length,
-                    itemBuilder: (context, index) {
-                      return _buildTrainCard(searchResults[index]);
-                    },
-                  ),
+                  child: _searchResults.isEmpty
+                      ? const Center(
+                          child: Text(
+                            'No matching trains found.',
+                            style: TextStyle(color: Colors.grey, fontSize: 14),
+                          ),
+                        )
+                      : ListView.builder(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 20,
+                          ),
+                          itemCount: _searchResults.length,
+                          itemBuilder: (context, index) {
+                            return _buildTrainCard(_searchResults[index]);
+                          },
+                        ),
                 ),
               )
             else
@@ -247,7 +302,7 @@ class _LiveTrainSearchScreenState extends State<LiveTrainSearchScreen> {
     );
   }
 
-  Widget _buildTrainCard(Map<String, dynamic> train) {
+  Widget _buildTrainCard(Train train) {
     return Container(
       margin: const EdgeInsets.only(bottom: 14),
       decoration: BoxDecoration(
@@ -291,7 +346,7 @@ class _LiveTrainSearchScreenState extends State<LiveTrainSearchScreen> {
                     ),
                   ),
                   Text(
-                    train['trainNo'],
+                    train.trainNumber,
                     style: const TextStyle(
                       color: Colors.black,
                       fontSize: 16,
@@ -309,7 +364,7 @@ class _LiveTrainSearchScreenState extends State<LiveTrainSearchScreen> {
               Icon(Icons.access_time, color: Colors.orange[700], size: 18),
               const SizedBox(width: 8),
               Text(
-                train['time'],
+                train.departureTime,
                 style: TextStyle(
                   color: Colors.orange[700],
                   fontSize: 14,
@@ -326,7 +381,7 @@ class _LiveTrainSearchScreenState extends State<LiveTrainSearchScreen> {
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  train['route'],
+                  train.route,
                   style: const TextStyle(
                     color: Colors.black87,
                     fontSize: 12,
