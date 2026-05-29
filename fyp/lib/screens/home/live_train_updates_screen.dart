@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 
 import '../../api/train.dart';
 
-/// Live Train Updates Screen
-/// Shows real-time train updates with My Trains and Search functionality
-/// SOLID Principles: Single Responsibility, Open/Closed, Dependency Inversion
+/// Live Train Updates Screen - Enhanced
+/// Shows real-time train updates with detailed information
+/// Displays: Train Number, Train Name, Line, Train Type,
+///           From/To Stations, Departure & Arrival Times
 class LiveTrainUpdatesScreen extends StatefulWidget {
   const LiveTrainUpdatesScreen({super.key});
 
@@ -330,286 +331,271 @@ class _LiveTrainUpdatesScreenState extends State<LiveTrainUpdatesScreen> {
   }
 
   Widget _buildSearchResultCard(Train train) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      decoration: BoxDecoration(
-        color: const Color(0xFFB8A892),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Train number with icon
-          Row(
-            children: [
-              Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: Colors.grey[600],
-                  shape: BoxShape.circle,
+    return GestureDetector(
+      onTap: () => _showTrainDetails(train),
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 16),
+        decoration: BoxDecoration(
+          color: const Color(0xFFB8A892),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Train header
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[600],
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(Icons.train, color: Colors.white, size: 24),
                 ),
-                child: const Icon(Icons.train, color: Colors.white, size: 24),
-              ),
-              const SizedBox(width: 12),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Train No: ${train.trainNumber}',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                    ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Train No: ${train.trainNumber}',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        train.trainName,
+                        style: const TextStyle(
+                          color: Colors.white70,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 2),
-                  Text(
-                    train.departureTime,
-                    style: const TextStyle(color: Colors.white70, fontSize: 12),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          // Route
-          Text(
-            train.route,
-            style: const TextStyle(color: Colors.white, fontSize: 12),
-          ),
-          const SizedBox(height: 14),
-          // Live Station button
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      'Live Station - Train No: ${train.trainNumber}',
-                    ),
-                    backgroundColor: const Color(0xFF8B6944),
-                    duration: const Duration(seconds: 2),
-                  ),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFF0B8B8),
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
                 ),
-                padding: const EdgeInsets.symmetric(vertical: 10),
+              ],
+            ),
+            const SizedBox(height: 12),
+            // Line / Type
+            Text(
+              'Line: ${train.line} • Type: ${train.trainType}',
+              style: const TextStyle(color: Colors.white70, fontSize: 12),
+            ),
+            const SizedBox(height: 12),
+            // Route and times
+            Text(
+              '${train.departure.toUpperCase()} → ${train.destination.toUpperCase()}',
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 13,
+                fontWeight: FontWeight.bold,
               ),
-              child: const Text(
-                'LIVE STATION',
-                style: TextStyle(
-                  color: Color(0xFFD32F2F),
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
+            ),
+            const SizedBox(height: 4),
+            Text(
+              'Origin Departure: ${train.departureTime}',
+              style: const TextStyle(color: Colors.white70, fontSize: 12),
+            ),
+            const SizedBox(height: 2),
+            Text(
+              'Destination Arrival: ${train.arrivalTime}',
+              style: const TextStyle(color: Colors.white70, fontSize: 12),
+            ),
+            const SizedBox(height: 14),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              decoration: BoxDecoration(
+                color: const Color(0xFF8B6944),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Center(
+                child: Text(
+                  'VIEW DETAILS',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 13,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
-          ),
-          const SizedBox(height: 12),
-          // Bidirectional arrow
-          Center(
-            child: Icon(Icons.unfold_more, color: Colors.white70, size: 28),
-          ),
-          const SizedBox(height: 12),
-          // Search field for estimated arrival
-          TextField(
-            decoration: InputDecoration(
-              hintText: 'SEARCH...',
-              hintStyle: const TextStyle(
-                color: Colors.white70,
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-              ),
-              prefixIcon: const Icon(
-                Icons.search,
-                color: Colors.white70,
-                size: 18,
-              ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(6),
-                borderSide: const BorderSide(color: Colors.white30),
-              ),
-              contentPadding: const EdgeInsets.symmetric(
-                vertical: 10,
-                horizontal: 8,
-              ),
-            ),
-            style: const TextStyle(color: Colors.white),
-          ),
-          const SizedBox(height: 8),
-          // Estimated arrival text
-          const Text(
-            'Estimated Arrival Time at Your Station',
-            style: TextStyle(color: Colors.white70, fontSize: 11),
-          ),
-          const SizedBox(height: 12),
-          // Stop Stations button
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      'Stop Stations - Train No: ${train.trainNumber}',
-                    ),
-                    backgroundColor: const Color(0xFF8B6944),
-                    duration: const Duration(seconds: 2),
-                  ),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFF0B8B8),
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                padding: const EdgeInsets.symmetric(vertical: 10),
-              ),
-              child: const Text(
-                'STOP STATIONS',
-                style: TextStyle(
-                  color: Color(0xFFD32F2F),
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
   Widget _buildTrainUpdateCard(Train train) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      decoration: BoxDecoration(
-        color: const Color(0xFFE0F7FF),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      padding: const EdgeInsets.all(14),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Train number with icon
-          Row(
-            children: [
-              Container(
-                width: 36,
-                height: 36,
-                decoration: BoxDecoration(
-                  color: Colors.grey[400],
-                  shape: BoxShape.circle,
+    return GestureDetector(
+      onTap: () => _showTrainDetails(train),
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        decoration: BoxDecoration(
+          color: const Color(0xFFE0F7FF),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        padding: const EdgeInsets.all(14),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Train number with icon
+            Row(
+              children: [
+                Container(
+                  width: 36,
+                  height: 36,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[400],
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(Icons.train, color: Colors.white, size: 20),
                 ),
-                child: const Icon(Icons.train, color: Colors.white, size: 20),
-              ),
-              const SizedBox(width: 12),
-              Text(
-                'Train No: ${train.trainNumber}',
-                style: const TextStyle(
-                  color: Color(0xFF424242),
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
+                const SizedBox(width: 12),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Train No: ${train.trainNumber}',
+                      style: const TextStyle(
+                        color: Color(0xFF424242),
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      train.trainName,
+                      style: const TextStyle(
+                        color: Color(0xFF424242),
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 10),
-          // Time
-          Text(
-            train.departureTime,
-            style: const TextStyle(
-              color: Color(0xFF424242),
-              fontSize: 13,
-              fontWeight: FontWeight.bold,
+              ],
             ),
-          ),
-          const SizedBox(height: 4),
-          // Route
-          Text(
-            train.route,
-            style: const TextStyle(color: Color(0xFF424242), fontSize: 12),
-          ),
-          const SizedBox(height: 10),
-          // Action buttons
-          Row(
-            children: [
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          'Live Station - Train No: ${train.trainNumber}',
-                        ),
-                        backgroundColor: const Color(0xFF8B6944),
-                        duration: const Duration(seconds: 2),
+            const SizedBox(height: 10),
+            // Time and route
+            Text(
+              'Departure: ${train.departureTime} | Arrival: ${train.arrivalTime}',
+              style: const TextStyle(
+                color: Color(0xFF424242),
+                fontSize: 13,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              train.route,
+              style: const TextStyle(color: Color(0xFF424242), fontSize: 12),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              'Line: ${train.line} • Type: ${train.trainType}',
+              style: const TextStyle(color: Color(0xFF424242), fontSize: 12),
+            ),
+            const SizedBox(height: 10),
+            // Action buttons
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () => _showTrainDetails(train),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFF0B8B8),
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(6),
                       ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFF0B8B8),
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(6),
+                      padding: const EdgeInsets.symmetric(vertical: 8),
                     ),
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                  ),
-                  child: const Text(
-                    'LIVE STATION',
-                    style: TextStyle(
-                      color: Color(0xFFD32F2F),
-                      fontSize: 11,
-                      fontWeight: FontWeight.bold,
+                    child: const Text(
+                      'LIVE STATION',
+                      style: TextStyle(
+                        color: Color(0xFFD32F2F),
+                        fontSize: 11,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          'Stop Stations - Train No: ${train.trainNumber}',
+                const SizedBox(width: 8),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            'Stop Stations - Train No: ${train.trainNumber}',
+                          ),
+                          backgroundColor: const Color(0xFF8B6944),
+                          duration: const Duration(seconds: 2),
                         ),
-                        backgroundColor: const Color(0xFF8B6944),
-                        duration: const Duration(seconds: 2),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFF0B8B8),
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(6),
                       ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFF0B8B8),
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(6),
+                      padding: const EdgeInsets.symmetric(vertical: 8),
                     ),
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                  ),
-                  child: const Text(
-                    'STOP STATIONS',
-                    style: TextStyle(
-                      color: Color(0xFFD32F2F),
-                      fontSize: 11,
-                      fontWeight: FontWeight.bold,
+                    child: const Text(
+                      'STOP STATIONS',
+                      style: TextStyle(
+                        color: Color(0xFFD32F2F),
+                        fontSize: 11,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
+
+  void _showTrainDetails(Train train) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Train ${train.trainNumber} - ${train.trainName}'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Line: ${train.line}'),
+              Text('Type: ${train.trainType}'),
+              const SizedBox(height: 8),
+              Text('From: ${train.departure}'),
+              Text('To: ${train.destination}'),
+              const SizedBox(height: 8),
+              Text('Departure: ${train.departureTime}'),
+              Text('Arrival: ${train.arrivalTime}'),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('CLOSE'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 }
+

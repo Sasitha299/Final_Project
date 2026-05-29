@@ -46,7 +46,8 @@ class _LiveTrainSearchScreenState extends State<LiveTrainSearchScreen> {
       });
     } else {
       setState(() {
-        _errorMessage = result['message']?.toString() ?? 'Failed to load trains';
+        _errorMessage =
+            result['message']?.toString() ?? 'Failed to load trains';
         _isLoading = false;
       });
     }
@@ -75,9 +76,9 @@ class _LiveTrainSearchScreenState extends State<LiveTrainSearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    String formattedDate = DateFormat('dd / MM / yyyy - EEE')
-        .format(_selectedDate)
-        .toUpperCase();
+    String formattedDate = DateFormat(
+      'dd / MM / yyyy - EEE',
+    ).format(_selectedDate).toUpperCase();
 
     // Keep UI reactive; search results are updated on button press.
     // No side effects here.
@@ -218,9 +219,7 @@ class _LiveTrainSearchScreenState extends State<LiveTrainSearchScreen> {
             ),
             // Search Results
             if (_isLoading)
-              const Expanded(
-                child: Center(child: CircularProgressIndicator()),
-              )
+              const Expanded(child: Center(child: CircularProgressIndicator()))
             else if (_errorMessage != null)
               Expanded(
                 child: Center(
@@ -232,7 +231,10 @@ class _LiveTrainSearchScreenState extends State<LiveTrainSearchScreen> {
                         Text(
                           _errorMessage!,
                           textAlign: TextAlign.center,
-                          style: const TextStyle(color: Colors.red, fontSize: 14),
+                          style: const TextStyle(
+                            color: Colors.red,
+                            fontSize: 14,
+                          ),
                         ),
                         const SizedBox(height: 12),
                         ElevatedButton(
@@ -290,11 +292,7 @@ class _LiveTrainSearchScreenState extends State<LiveTrainSearchScreen> {
           hintText: hintText,
           hintStyle: TextStyle(color: Colors.grey[400], fontSize: 13),
           border: InputBorder.none,
-          prefixIcon: Icon(
-            Icons.search,
-            color: Colors.grey[400],
-            size: 20,
-          ),
+          prefixIcon: Icon(Icons.search, color: Colors.grey[400], size: 20),
           contentPadding: const EdgeInsets.symmetric(vertical: 12),
         ),
         style: const TextStyle(fontSize: 13, color: Colors.black),
@@ -303,98 +301,152 @@ class _LiveTrainSearchScreenState extends State<LiveTrainSearchScreen> {
   }
 
   Widget _buildTrainCard(Train train) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 14),
-      decoration: BoxDecoration(
-        color: const Color(0xFFE0F4FF),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: Colors.grey[300] ?? Colors.grey,
-          width: 1,
+    return GestureDetector(
+      onTap: () => _showTrainDetails(train),
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 14),
+        decoration: BoxDecoration(
+          color: const Color(0xFFE0F4FF),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.grey[300] ?? Colors.grey, width: 1),
+        ),
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Train number and name
+            Row(
+              children: [
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[500],
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(Icons.train, color: Colors.white, size: 22),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Train No',
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 11,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      Text(
+                        train.trainNumber,
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        train.trainName,
+                        style: const TextStyle(
+                          color: Colors.black87,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 14),
+            // Line and train type
+            Row(
+              children: [
+                Icon(Icons.alt_route, color: Colors.blue[700], size: 18),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    'Line: ${train.line} • Type: ${train.trainType}',
+                    style: const TextStyle(
+                      color: Colors.black87,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            // Departure and arrival route
+            Row(
+              children: [
+                Icon(Icons.location_on, color: Colors.red[700], size: 18),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    '${train.departure} → ${train.destination}',
+                    style: const TextStyle(
+                      color: Colors.black87,
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            // Origin and destination times
+            Text(
+              'Origin Departure: ${train.departureTime}',
+              style: const TextStyle(
+                color: Colors.black87,
+                fontSize: 12,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              'Destination Arrival: ${train.arrivalTime}',
+              style: const TextStyle(
+                color: Colors.black87,
+                fontSize: 12,
+              ),
+            ),
+          ],
         ),
       ),
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Train number with icon
-          Row(
+    );
+  }
+
+  void _showTrainDetails(Train train) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('${train.trainNumber} • ${train.trainName}'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: Colors.grey[500],
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(
-                  Icons.train,
-                  color: Colors.white,
-                  size: 22,
-                ),
-              ),
-              const SizedBox(width: 12),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Train No:',
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 11,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  Text(
-                    train.trainNumber,
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
+              Text('Line: ${train.line}'),
+              Text('Type: ${train.trainType}'),
+              const SizedBox(height: 8),
+              Text('From: ${train.departure}'),
+              Text('To: ${train.destination}'),
+              const SizedBox(height: 8),
+              Text('Origin Departure: ${train.departureTime}'),
+              Text('Destination Arrival: ${train.arrivalTime}'),
             ],
           ),
-          const SizedBox(height: 12),
-          // Time
-          Row(
-            children: [
-              Icon(Icons.access_time, color: Colors.orange[700], size: 18),
-              const SizedBox(width: 8),
-              Text(
-                train.departureTime,
-                style: TextStyle(
-                  color: Colors.orange[700],
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 10),
-          // Route
-          Row(
-            children: [
-              Icon(Icons.location_on, color: Colors.red[700], size: 18),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  train.route,
-                  style: const TextStyle(
-                    color: Colors.black87,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('CLOSE'),
+            ),
+          ],
+        );
+      },
     );
   }
 }
