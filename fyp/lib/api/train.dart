@@ -16,6 +16,10 @@ class Train {
   final String destination;
   final String departureTime;
   final String arrivalTime;
+  String? currentStation;
+  String? currentStationTime;
+  String? nextStation;
+  String? nextStationTime;
 
   Train({
     required this.id,
@@ -27,6 +31,10 @@ class Train {
     required this.destination,
     required this.departureTime,
     required this.arrivalTime,
+    this.currentStation,
+    this.currentStationTime,
+    this.nextStation,
+    this.nextStationTime,
   });
 
   factory Train.fromJson(Map<String, dynamic> json) {
@@ -40,6 +48,10 @@ class Train {
       destination: json['destination']?.toString() ?? '',
       departureTime: json['departureTime']?.toString() ?? '',
       arrivalTime: json['arrivalTime']?.toString() ?? '',
+      currentStation: json['currentStation']?.toString(),
+      currentStationTime: json['currentStationTime']?.toString(),
+      nextStation: json['nextStation']?.toString(),
+      nextStationTime: json['nextStationTime']?.toString(),
     );
   }
 
@@ -54,6 +66,10 @@ class Train {
       'destination': destination,
       'departureTime': departureTime,
       'arrivalTime': arrivalTime,
+      'currentStation': currentStation,
+      'currentStationTime': currentStationTime,
+      'nextStation': nextStation,
+      'nextStationTime': nextStationTime,
     };
   }
 
