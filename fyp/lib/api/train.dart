@@ -117,3 +117,17 @@ Future<Map<String, dynamic>> fetchAllTrains() async {
     return {'success': false, 'message': e.toString()};
   }
 }
+
+/// Fetches trains from the backend and returns only trains for the given line.
+Future<Map<String, dynamic>> fetchTrainsByLine(String line) async {
+  final allResult = await fetchAllTrains();
+  if (allResult['success'] == true && allResult['data'] is List<Train>) {
+    final lowerLine = line.toLowerCase();
+    final trains = (allResult['data'] as List<Train>).where((train) {
+      final trainLine = train.line.toLowerCase();
+      return trainLine.contains(lowerLine);
+    }).toList();
+    return {'success': true, 'data': trains};
+  }
+  return allResult;
+}
