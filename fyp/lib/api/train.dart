@@ -12,10 +12,14 @@ class Train {
   final String trainName;
   final String line;
   final String trainType;
-  final String departure;
-  final String destination;
-  final String departureTime;
-  final String arrivalTime;
+  final String fromStation;
+  final String toStation;
+  final String originDepartureTime;
+  final String destinationArrivalTime;
+  final String expectedSeries;
+  final String expectedClass;
+  final String activeStatus;
+  final String remarks;
   String? currentStation;
   String? currentStationTime;
   String? nextStation;
@@ -27,10 +31,14 @@ class Train {
     required this.trainName,
     required this.line,
     required this.trainType,
-    required this.departure,
-    required this.destination,
-    required this.departureTime,
-    required this.arrivalTime,
+    required this.fromStation,
+    required this.toStation,
+    required this.originDepartureTime,
+    required this.destinationArrivalTime,
+    required this.expectedSeries,
+    required this.expectedClass,
+    required this.activeStatus,
+    required this.remarks,
     this.currentStation,
     this.currentStationTime,
     this.nextStation,
@@ -38,16 +46,33 @@ class Train {
   });
 
   factory Train.fromJson(Map<String, dynamic> json) {
+    final departureStation = json['fromStation']?.toString() ??
+        json['departure']?.toString() ??
+        '';
+    final destinationStation = json['toStation']?.toString() ??
+        json['destination']?.toString() ??
+        '';
+    final departureTimeValue = json['originDepartureTime']?.toString() ??
+        json['departureTime']?.toString() ??
+        '';
+    final arrivalTimeValue = json['destinationArrivalTime']?.toString() ??
+        json['arrivalTime']?.toString() ??
+        '';
+
     return Train(
       id: json['_id']?.toString() ?? '',
       trainNumber: json['trainNumber']?.toString() ?? '',
       trainName: json['trainName']?.toString() ?? '',
       line: json['line']?.toString() ?? '',
       trainType: json['trainType']?.toString() ?? '',
-      departure: json['departure']?.toString() ?? '',
-      destination: json['destination']?.toString() ?? '',
-      departureTime: json['departureTime']?.toString() ?? '',
-      arrivalTime: json['arrivalTime']?.toString() ?? '',
+      fromStation: departureStation,
+      toStation: destinationStation,
+      originDepartureTime: departureTimeValue,
+      destinationArrivalTime: arrivalTimeValue,
+      expectedSeries: json['expectedSeries']?.toString() ?? '',
+      expectedClass: json['expectedClass']?.toString() ?? '',
+      activeStatus: json['activeStatus']?.toString() ?? '',
+      remarks: json['remarks']?.toString() ?? '',
       currentStation: json['currentStation']?.toString(),
       currentStationTime: json['currentStationTime']?.toString(),
       nextStation: json['nextStation']?.toString(),
@@ -62,10 +87,18 @@ class Train {
       'trainName': trainName,
       'line': line,
       'trainType': trainType,
-      'departure': departure,
-      'destination': destination,
-      'departureTime': departureTime,
-      'arrivalTime': arrivalTime,
+      'fromStation': fromStation,
+      'toStation': toStation,
+      'originDepartureTime': originDepartureTime,
+      'destinationArrivalTime': destinationArrivalTime,
+      'expectedSeries': expectedSeries,
+      'expectedClass': expectedClass,
+      'activeStatus': activeStatus,
+      'remarks': remarks,
+      'departure': fromStation,
+      'destination': toStation,
+      'departureTime': originDepartureTime,
+      'arrivalTime': destinationArrivalTime,
       'currentStation': currentStation,
       'currentStationTime': currentStationTime,
       'nextStation': nextStation,
@@ -73,8 +106,12 @@ class Train {
     };
   }
 
-  String get route =>
-      '${departure.toUpperCase()} → ${destination.toUpperCase()}';
+  String get departure => fromStation;
+  String get destination => toStation;
+  String get departureTime => originDepartureTime;
+  String get arrivalTime => destinationArrivalTime;
+
+  String get route => '${departure.toUpperCase()} → ${destination.toUpperCase()}';
 }
 
 /// Fetches all trains from the backend.
