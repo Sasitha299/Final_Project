@@ -38,7 +38,7 @@ class TimeScreen extends StatelessWidget {
                     context,
                     label: 'Time Table',
                     onTap: () {
-                      Navigator.pushNamed(context, '/timeTableSelection');
+                      Navigator.pushNamed(context, AppRoutes.dailyTimeTable);
                     },
                   ),
                   const SizedBox(height: 16),
