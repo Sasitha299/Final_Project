@@ -34,7 +34,8 @@ class _LiveTrainAlertsViewState extends State<LiveTrainAlertsView> {
       });
     } else {
       setState(() {
-        _errorMessage = result['message']?.toString() ?? 'Failed to load alerts';
+        _errorMessage =
+            result['message']?.toString() ?? 'Failed to load alerts';
         _isLoading = false;
       });
     }
@@ -86,9 +87,12 @@ class _LiveTrainAlertsViewState extends State<LiveTrainAlertsView> {
         return Column(
           children: [
             _buildAlertCard(
-              title: 'Train ${alert.trainNumber} (${alert.departure} → ${alert.destination})',
+              trainNumber: alert.trainNumber,
+              departure: alert.departure,
+              destination: alert.destination,
+              realTime: alert.time,
+              routeDirection: _getRouteDirection(alert),
               description: alert.news,
-              time: alert.time,
               severity: _getSeverityLabel(alert.news),
               severityColor: _getSeverityColor(alert.news),
             ),
@@ -97,6 +101,18 @@ class _LiveTrainAlertsViewState extends State<LiveTrainAlertsView> {
         );
       },
     );
+  }
+
+  String _getRouteDirection(TrainAlert alert) {
+    final dep = alert.departure.toLowerCase();
+    final dest = alert.destination.toLowerCase();
+    if (dep.contains('colombo') || dest.contains('matara')) {
+      return 'Up';
+    }
+    if (dest.contains('colombo') || dep.contains('matara')) {
+      return 'Down';
+    }
+    return 'Up / Down';
   }
 
   String _getSeverityLabel(String news) {
@@ -123,9 +139,12 @@ class _LiveTrainAlertsViewState extends State<LiveTrainAlertsView> {
   }
 
   Widget _buildAlertCard({
-    required String title,
+    required String trainNumber,
+    required String departure,
+    required String destination,
+    required String realTime,
+    required String routeDirection,
     required String description,
-    required String time,
     required String severity,
     required Color severityColor,
   }) {
@@ -139,14 +158,28 @@ class _LiveTrainAlertsViewState extends State<LiveTrainAlertsView> {
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
-                  child: Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Real Time: $realTime',
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        'Train No: $trainNumber',
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 Container(
@@ -169,14 +202,29 @@ class _LiveTrainAlertsViewState extends State<LiveTrainAlertsView> {
                 ),
               ],
             ),
-            const SizedBox(height: 6),
+            const SizedBox(height: 12),
+            Text(
+              'Destination: $destination',
+              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              'Route: $routeDirection',
+              style: const TextStyle(fontSize: 12, color: Colors.black87),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'From $departure to $destination',
+              style: const TextStyle(fontSize: 12, color: Colors.black54),
+            ),
+            const SizedBox(height: 12),
             Text(
               description,
               style: TextStyle(fontSize: 11, color: Colors.grey[700]),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 10),
             Text(
-              'Time: $time',
+              'Alert Time: $realTime',
               style: TextStyle(fontSize: 10, color: Colors.grey[500]),
             ),
           ],
